@@ -99,6 +99,11 @@ class Cuest:
         L.cuestBasisDestroy.restype = c_int
         L.cuestBasisNumFunctions.argtypes = [c_void_p, POINTER(c_int)]
         L.cuestBasisNumFunctions.restype = c_int
+        L.cuestBasisNumShells.argtypes = [c_void_p, POINTER(c_int)]
+        L.cuestBasisNumShells.restype = c_int
+        L.cuestBasisShellInfo.argtypes = [c_void_p, c_int, POINTER(c_int), POINTER(c_int),
+                                          POINTER(c_int), POINTER(c_int), POINTER(c_int)]
+        L.cuestBasisShellInfo.restype = c_int
         L.cuestSchwarzBounds.argtypes = [c_void_p, c_void_p, POINTER(c_double)]
         L.cuestSchwarzBounds.restype = c_int
         for fn in ("cuestOverlapMatrix", "cuestKineticMatrix", "cuestNuclearMatrix"):
@@ -194,11 +199,23 @@ class Basis:
         self._handle = handle
         self.nbf = nbf
         ns = c_int()
-        # cuestBasisNumShells is wired lazily below to avoid changing argtypes globally.
-        owner._lib.cuestBasisNumShells.argtypes = [c_void_p, POINTER(c_int)]
-        owner._lib.cuestBasisNumShells.restype = c_int
         owner._check(owner._lib.cuestBasisNumShells(handle, byref(ns)))
         self.nshells = ns.value
+
+    def shells(self):
+        """Return shell metadata as a list of dicts."""
+        out = []
+        for i in range(self.nshells):
+            atom = c_int()
+            am = c_int()
+            nprim = c_int()
+            nctr = c_int()
+            off = c_int()
+            self._owner._check(self._owner._lib.cuestBasisShellInfo(
+                self._handle, i, byref(atom), byref(am), byref(nprim), byref(nctr), byref(off)))
+            out.append(dict(atom=atom.value, am=am.value, nprim=nprim.value,
+                            nctr=nctr.value, func_offset=off.value))
+        return out
 
     def __del__(self):
         if getattr(self, "_handle", None):

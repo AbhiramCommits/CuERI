@@ -1,0 +1,5 @@
+results/ptxas_verbose.txt
+=======================
+Tier C build: no CUDA toolkit and no NVIDIA GPU on the build machine; no kernel was compiled or run, so registers, spills and occupancy do not exist
+
+The CMake build adds -lineinfo -Xptxas -v and runs a ptxas capture target only when a CUDA toolkit is found. This build found no nvcc.

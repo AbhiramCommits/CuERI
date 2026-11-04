@@ -1,0 +1,145 @@
+backend,algorithm,molecule,basis,operation,precision,median_ms,rate,rate_unit,repeats,speedup_vs_cpu1,screened_fraction,quartets_screened,quartets_total,nbf,status
+cpu-1thread,md,h2,sto-3g,overlap,fp64,0.000791,5056890.012642,matrix-elements/s,3,1.000,0.0,0,0,2,measured
+cpu-1thread,md,h2,sto-3g,kinetic,fp64,0.001458,2743484.224966,matrix-elements/s,3,1.000,0.0,0,0,2,measured
+cpu-1thread,md,h2,sto-3g,nuclear,fp64,0.004208,950570.342205,matrix-elements/s,3,1.000,0.0,0,0,2,measured
+cpu-1thread,md,h2,sto-3g,eri,fp64,0.166917,95856.024252,integrals/s,3,1.000,0.0,0,6,2,measured
+cpu-1thread,rys,h2,sto-3g,eri,fp64,0.178166,89803.890754,integrals/s,3,1.000,0.0,0,6,2,measured
+cpu-1thread,md,h2,sto-3g,eri,fp32,0.123333,129730.080352,integrals/s,3,1.000,0.0,0,6,2,measured
+cpu-1thread,rys,h2,sto-3g,eri,fp32,0.13525,118299.445471,integrals/s,3,1.000,0.0,0,6,2,measured
+cpu-openmp,md,h2,sto-3g,overlap,fp64,0.013958,286574.007737,matrix-elements/s,3,0.057,0.0,0,0,2,measured
+cpu-openmp,md,h2,sto-3g,kinetic,fp64,0.022375,178770.949721,matrix-elements/s,3,0.065,0.0,0,0,2,measured
+cpu-openmp,md,h2,sto-3g,nuclear,fp64,0.02475,161616.161616,matrix-elements/s,3,0.170,0.0,0,0,2,measured
+cpu-openmp,md,h2,sto-3g,eri,fp64,0.14175,112874.779541,integrals/s,3,1.178,0.0,0,6,2,measured
+cpu-openmp,rys,h2,sto-3g,eri,fp64,0.144083,111047.104794,integrals/s,3,1.237,0.0,0,6,2,measured
+cpu-openmp,md,h2,sto-3g,eri,fp32,0.109125,146620.847652,integrals/s,3,1.130,0.0,0,6,2,measured
+cpu-openmp,rys,h2,sto-3g,eri,fp32,0.11625,137634.408602,integrals/s,3,1.163,0.0,0,6,2,measured
+cpu-1thread,md,h2o,sto-3g,overlap,fp64,0.006834,7170032.191981,matrix-elements/s,3,1.000,0.0,0,0,7,measured
+cpu-1thread,md,h2o,sto-3g,kinetic,fp64,0.01425,3438596.491228,matrix-elements/s,3,1.000,0.0,0,0,7,measured
+cpu-1thread,md,h2o,sto-3g,nuclear,fp64,0.095042,515561.541213,matrix-elements/s,3,1.000,0.0,0,0,7,measured
+cpu-1thread,md,h2o,sto-3g,eri,fp64,3.851959,623319.1994,integrals/s,3,1.000,0.0,0,120,7,measured
+cpu-1thread,rys,h2o,sto-3g,eri,fp64,4.759958,504416.215437,integrals/s,3,1.000,0.0,0,120,7,measured
+cpu-1thread,md,h2o,sto-3g,eri,fp32,2.931166,819127.951129,integrals/s,3,1.000,0.0,0,120,7,measured
+cpu-1thread,rys,h2o,sto-3g,eri,fp32,3.932375,610572.491179,integrals/s,3,1.000,0.0,0,120,7,measured
+cpu-openmp,md,h2o,sto-3g,overlap,fp64,0.031417,1559665.149441,matrix-elements/s,3,0.218,0.0,0,0,7,measured
+cpu-openmp,md,h2o,sto-3g,kinetic,fp64,0.027,1814814.814815,matrix-elements/s,3,0.528,0.0,0,0,7,measured
+cpu-openmp,md,h2o,sto-3g,nuclear,fp64,0.065541,747623.624907,matrix-elements/s,3,1.450,0.0,0,0,7,measured
+cpu-openmp,md,h2o,sto-3g,eri,fp64,0.967458,2481761.482152,integrals/s,3,3.982,0.0,0,120,7,measured
+cpu-openmp,rys,h2o,sto-3g,eri,fp64,1.31125,1831077.216397,integrals/s,3,3.630,0.0,0,120,7,measured
+cpu-openmp,md,h2o,sto-3g,eri,fp32,0.854583,2809557.409871,integrals/s,3,3.430,0.0,0,120,7,measured
+cpu-openmp,rys,h2o,sto-3g,eri,fp32,1.268209,1893221.070029,integrals/s,3,3.101,0.0,0,120,7,measured
+cpu-1thread,md,h2o,6-31g,overlap,fp64,0.012666,13342807.516185,matrix-elements/s,3,1.000,0.0,0,0,13,measured
+cpu-1thread,md,h2o,6-31g,kinetic,fp64,0.029125,5802575.107296,matrix-elements/s,3,1.000,0.0,0,0,13,measured
+cpu-1thread,md,h2o,6-31g,nuclear,fp64,0.141041,1198233.137882,matrix-elements/s,3,1.000,0.0,0,0,13,measured
+cpu-1thread,md,h2o,6-31g,eri,fp64,14.05725,2031762.969286,integrals/s,3,1.000,0.0,0,1035,13,measured
+cpu-1thread,rys,h2o,6-31g,eri,fp64,16.71825,1708372.586844,integrals/s,3,1.000,0.0,0,1035,13,measured
+cpu-1thread,md,h2o,6-31g,eri,fp32,10.418375,2741406.409349,integrals/s,3,1.000,0.0,0,1035,13,measured
+cpu-1thread,rys,h2o,6-31g,eri,fp32,13.249333,2155655.684705,integrals/s,3,1.000,0.0,0,1035,13,measured
+cpu-openmp,md,h2o,6-31g,overlap,fp64,0.043042,3926397.472236,matrix-elements/s,3,0.294,0.0,0,0,13,measured
+cpu-openmp,md,h2o,6-31g,kinetic,fp64,0.038083,4437675.603288,matrix-elements/s,3,0.765,0.0,0,0,13,measured
+cpu-openmp,md,h2o,6-31g,nuclear,fp64,0.075708,2232260.791462,matrix-elements/s,3,1.863,0.0,0,0,13,measured
+cpu-openmp,md,h2o,6-31g,eri,fp64,2.765208,10328698.600612,integrals/s,3,5.084,0.0,0,1035,13,measured
+cpu-openmp,rys,h2o,6-31g,eri,fp64,3.238417,8819432.457278,integrals/s,3,5.162,0.0,0,1035,13,measured
+cpu-openmp,md,h2o,6-31g,eri,fp32,2.255,12665631.929047,integrals/s,3,4.620,0.0,0,1035,13,measured
+cpu-openmp,rys,h2o,6-31g,eri,fp32,2.658542,10743106.559911,integrals/s,3,4.984,0.0,0,1035,13,measured
+cpu-1thread,md,h2o,6-31g*,overlap,fp64,0.019708,18317434.544347,matrix-elements/s,3,1.000,0.0,0,0,19,measured
+cpu-1thread,md,h2o,6-31g*,kinetic,fp64,0.039875,9053291.53605,matrix-elements/s,3,1.000,0.0,0,0,19,measured
+cpu-1thread,md,h2o,6-31g*,nuclear,fp64,0.25025,1442557.442557,matrix-elements/s,3,1.000,0.0,0,0,19,measured
+cpu-1thread,md,h2o,6-31g*,eri,fp64,20.64575,6312243.439933,integrals/s,3,1.000,0.0,0,1540,19,measured
+cpu-1thread,rys,h2o,6-31g*,eri,fp64,29.255542,4454574.794752,integrals/s,3,1.000,0.0,0,1540,19,measured
+cpu-1thread,md,h2o,6-31g*,eri,fp32,16.83825,7739581.013466,integrals/s,3,1.000,0.0,0,1540,19,measured
+cpu-1thread,rys,h2o,6-31g*,eri,fp32,25.622334,5086226.727042,integrals/s,3,1.000,0.0,0,1540,19,measured
+cpu-openmp,md,h2o,6-31g*,overlap,fp64,0.032792,11008782.62991,matrix-elements/s,3,0.601,0.0,0,0,19,measured
+cpu-openmp,md,h2o,6-31g*,kinetic,fp64,0.035666,10121684.517468,matrix-elements/s,3,1.118,0.0,0,0,19,measured
+cpu-openmp,md,h2o,6-31g*,nuclear,fp64,0.077875,4635634.028892,matrix-elements/s,3,3.213,0.0,0,0,19,measured
+cpu-openmp,md,h2o,6-31g*,eri,fp64,4.172292,31234870.426135,integrals/s,3,4.948,0.0,0,1540,19,measured
+cpu-openmp,rys,h2o,6-31g*,eri,fp64,6.141791,21218729.19479,integrals/s,3,4.763,0.0,0,1540,19,measured
+cpu-openmp,md,h2o,6-31g*,eri,fp32,3.688666,35330116.632951,integrals/s,3,4.565,0.0,0,1540,19,measured
+cpu-openmp,rys,h2o,6-31g*,eri,fp32,5.184875,25134839.316281,integrals/s,3,4.942,0.0,0,1540,19,measured
+cpu-1thread,md,ch4,6-31g,overlap,fp64,0.020334,14212648.765614,matrix-elements/s,3,1.000,0.0,0,0,17,measured
+cpu-1thread,md,ch4,6-31g,kinetic,fp64,0.039459,7324057.882866,matrix-elements/s,3,1.000,0.0,0,0,17,measured
+cpu-1thread,md,ch4,6-31g,nuclear,fp64,0.330291,874985.997196,matrix-elements/s,3,1.000,0.0,0,0,17,measured
+cpu-1thread,md,ch4,6-31g,eri,fp64,40.213625,2076932.880336,integrals/s,3,1.000,0.0,0,4186,17,measured
+cpu-1thread,rys,ch4,6-31g,eri,fp64,47.685625,1751492.194975,integrals/s,3,1.000,0.0,0,4186,17,measured
+cpu-1thread,md,ch4,6-31g,eri,fp32,31.551417,2647139.429586,integrals/s,3,1.000,0.0,0,4186,17,measured
+cpu-1thread,rys,ch4,6-31g,eri,fp32,38.192375,2186850.123879,integrals/s,3,1.000,0.0,0,4186,17,measured
+cpu-openmp,md,ch4,6-31g,overlap,fp64,0.031959,9042836.133796,matrix-elements/s,3,0.636,0.0,0,0,17,measured
+cpu-openmp,md,ch4,6-31g,kinetic,fp64,0.040208,7187624.353363,matrix-elements/s,3,0.981,0.0,0,0,17,measured
+cpu-openmp,md,ch4,6-31g,nuclear,fp64,0.121125,2385964.912281,matrix-elements/s,3,2.727,0.0,0,0,17,measured
+cpu-openmp,md,ch4,6-31g,eri,fp64,8.438833,9897221.570803,integrals/s,3,4.765,0.0,0,4186,17,measured
+cpu-openmp,rys,ch4,6-31g,eri,fp64,8.845959,9441712.311802,integrals/s,3,5.391,0.0,0,4186,17,measured
+cpu-openmp,md,ch4,6-31g,eri,fp32,5.931792,14080230.729601,integrals/s,3,5.319,0.0,0,4186,17,measured
+cpu-openmp,rys,ch4,6-31g,eri,fp32,7.353542,11357927.920994,integrals/s,3,5.194,0.0,0,4186,17,measured
+cpu-1thread,md,benzene,sto-3g,overlap,fp64,0.148916,8702892.906068,matrix-elements/s,3,1.000,0.0,0,0,36,measured
+cpu-1thread,md,benzene,sto-3g,kinetic,fp64,0.294458,4401306.807762,matrix-elements/s,3,1.000,0.0,0,0,36,measured
+cpu-1thread,md,benzene,sto-3g,nuclear,fp64,7.211583,179710.890106,matrix-elements/s,3,1.000,0.0,0,0,36,measured
+cpu-1thread,md,benzene,sto-3g,eri,fp64,1377.563792,1219265.49591,integrals/s,3,1.000,0.060266,2721,45150,36,measured
+cpu-1thread,rys,benzene,sto-3g,eri,fp64,1720.88125,976020.861405,integrals/s,3,1.000,0.060266,2721,45150,36,measured
+cpu-1thread,md,benzene,sto-3g,eri,fp32,1008.43375,1665569.007384,integrals/s,3,1.000,0.060266,2721,45150,36,measured
+cpu-1thread,rys,benzene,sto-3g,eri,fp32,1453.546042,1155529.960158,integrals/s,3,1.000,0.060266,2721,45150,36,measured
+cpu-openmp,md,benzene,sto-3g,overlap,fp64,0.06025,21510373.443983,matrix-elements/s,3,2.472,0.0,0,0,36,measured
+cpu-openmp,md,benzene,sto-3g,kinetic,fp64,0.087833,14755274.213564,matrix-elements/s,3,3.352,0.0,0,0,36,measured
+cpu-openmp,md,benzene,sto-3g,nuclear,fp64,1.301833,995519.394577,matrix-elements/s,3,5.540,0.0,0,0,36,measured
+cpu-openmp,md,benzene,sto-3g,eri,fp64,250.465458,6705978.594462,integrals/s,3,5.500,0.060266,2721,45150,36,measured
+cpu-openmp,rys,benzene,sto-3g,eri,fp64,346.525667,4847017.580375,integrals/s,3,4.966,0.060266,2721,45150,36,measured
+cpu-openmp,md,benzene,sto-3g,eri,fp32,220.191584,7627975.463404,integrals/s,3,4.580,0.060266,2721,45150,36,measured
+cpu-openmp,rys,benzene,sto-3g,eri,fp32,290.159792,5788589.757467,integrals/s,3,5.009,0.060266,2721,45150,36,measured
+cpu-1thread,md,benzene,6-31g,overlap,fp64,0.328458,13261969.566885,matrix-elements/s,3,1.000,0.0,0,0,66,measured
+cpu-1thread,md,benzene,6-31g,kinetic,fp64,0.70325,6194098.826875,matrix-elements/s,3,1.000,0.0,0,0,66,measured
+cpu-1thread,md,benzene,6-31g,nuclear,fp64,12.917292,337222.383763,matrix-elements/s,3,1.000,0.0,0,0,66,measured
+cpu-1thread,md,benzene,6-31g,eri,fp64,5030.452625,3771973.898671,integrals/s,3,1.000,0.081704,33348,408156,66,measured
+cpu-1thread,rys,benzene,6-31g,eri,fp64,6346.059333,2990002.930059,integrals/s,3,1.000,0.081704,33348,408156,66,measured
+cpu-1thread,md,benzene,6-31g,eri,fp32,3961.283291,4790047.720927,integrals/s,3,1.000,0.081704,33348,408156,66,measured
+cpu-1thread,rys,benzene,6-31g,eri,fp32,6280.770417,3021084.156912,integrals/s,3,1.000,0.081704,33348,408156,66,measured
+cpu-openmp,md,benzene,6-31g,overlap,fp64,0.126875,34333004.926108,matrix-elements/s,3,2.589,0.0,0,0,66,measured
+cpu-openmp,md,benzene,6-31g,kinetic,fp64,0.157,27745222.929936,matrix-elements/s,3,4.479,0.0,0,0,66,measured
+cpu-openmp,md,benzene,6-31g,nuclear,fp64,2.696625,1615352.523988,matrix-elements/s,3,4.790,0.0,0,0,66,measured
+cpu-openmp,md,benzene,6-31g,eri,fp64,1136.097917,16701673.08299,integrals/s,3,4.428,0.081704,33348,408156,66,measured
+cpu-openmp,rys,benzene,6-31g,eri,fp64,1431.443208,13255668.051624,integrals/s,3,4.433,0.081704,33348,408156,66,measured
+cpu-openmp,md,benzene,6-31g,eri,fp32,910.385,20842540.243963,integrals/s,3,4.351,0.081704,33348,408156,66,measured
+cpu-openmp,rys,benzene,6-31g,eri,fp32,1148.147458,16526392.901703,integrals/s,3,5.470,0.081704,33348,408156,66,measured
+cpu-1thread,md,benzene,6-31g*,overlap,fp64,0.616084,16887307.574941,matrix-elements/s,3,1.000,0.0,0,0,102,measured
+cpu-1thread,md,benzene,6-31g*,kinetic,fp64,1.336917,7782083.704523,matrix-elements/s,3,1.000,0.0,0,0,102,measured
+cpu-1thread,md,benzene,6-31g*,nuclear,fp64,26.660917,390234.139358,matrix-elements/s,3,1.000,0.0,0,0,102,measured
+cpu-1thread,md,benzene,6-31g*,eri,fp64,9381.261917,11538236.215732,integrals/s,3,1.000,0.066796,46228,692076,102,measured
+cpu-1thread,rys,benzene,6-31g*,eri,fp64,14623.990875,7401756.259643,integrals/s,3,1.000,0.066796,46228,692076,102,measured
+cpu-1thread,md,benzene,6-31g*,eri,fp32,7967.020667,13586410.845945,integrals/s,3,1.000,0.066796,46228,692076,102,measured
+cpu-1thread,rys,benzene,6-31g*,eri,fp32,13219.568,8188105.390433,integrals/s,3,1.000,0.066796,46228,692076,102,measured
+cpu-openmp,md,benzene,6-31g*,overlap,fp64,0.136584,76172904.586189,matrix-elements/s,3,4.511,0.0,0,0,102,measured
+cpu-openmp,md,benzene,6-31g*,kinetic,fp64,0.240542,43252321.839845,matrix-elements/s,3,5.558,0.0,0,0,102,measured
+cpu-openmp,md,benzene,6-31g*,nuclear,fp64,4.539667,2291798.054791,matrix-elements/s,3,5.873,0.0,0,0,102,measured
+cpu-openmp,md,benzene,6-31g*,eri,fp64,1909.340416,56691418.194963,integrals/s,3,4.913,0.066796,46228,692076,102,measured
+cpu-openmp,rys,benzene,6-31g*,eri,fp64,2831.027417,38234605.341514,integrals/s,3,5.166,0.066796,46228,692076,102,measured
+cpu-openmp,md,benzene,6-31g*,eri,fp32,1895.199084,57114430.306468,integrals/s,3,4.204,0.066796,46228,692076,102,measured
+cpu-openmp,rys,benzene,6-31g*,eri,fp32,2965.247917,36503934.588212,integrals/s,3,4.458,0.066796,46228,692076,102,measured
+cuda-fp64,md,benzene,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,66,not measured
+cuda-fp64,rys,benzene,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,66,not measured
+cuda-fp32,md,benzene,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,66,not measured
+cuda-fp32,rys,benzene,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,66,not measured
+cuda-fp64,md,benzene,6-31g*,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,102,not measured
+cuda-fp64,rys,benzene,6-31g*,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,102,not measured
+cuda-fp32,md,benzene,6-31g*,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,102,not measured
+cuda-fp32,rys,benzene,6-31g*,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,102,not measured
+cuda-fp64,md,benzene,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,36,not measured
+cuda-fp64,rys,benzene,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,36,not measured
+cuda-fp32,md,benzene,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,36,not measured
+cuda-fp32,rys,benzene,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,36,not measured
+cuda-fp64,md,ch4,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,17,not measured
+cuda-fp64,rys,ch4,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,17,not measured
+cuda-fp32,md,ch4,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,17,not measured
+cuda-fp32,rys,ch4,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,17,not measured
+cuda-fp64,md,h2,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,2,not measured
+cuda-fp64,rys,h2,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,2,not measured
+cuda-fp32,md,h2,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,2,not measured
+cuda-fp32,rys,h2,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,2,not measured
+cuda-fp64,md,h2o,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,13,not measured
+cuda-fp64,rys,h2o,6-31g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,13,not measured
+cuda-fp32,md,h2o,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,13,not measured
+cuda-fp32,rys,h2o,6-31g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,13,not measured
+cuda-fp64,md,h2o,6-31g*,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,19,not measured
+cuda-fp64,rys,h2o,6-31g*,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,19,not measured
+cuda-fp32,md,h2o,6-31g*,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,19,not measured
+cuda-fp32,rys,h2o,6-31g*,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,19,not measured
+cuda-fp64,md,h2o,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,7,not measured
+cuda-fp64,rys,h2o,sto-3g,eri,fp64,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,7,not measured
+cuda-fp32,md,h2o,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,7,not measured
+cuda-fp32,rys,h2o,sto-3g,eri,fp32,not measured (no GPU on build machine),not measured (no GPU on build machine),integrals/s,0,not measured (no GPU on build machine),,,,7,not measured

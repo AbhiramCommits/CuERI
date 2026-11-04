@@ -1,0 +1,3 @@
+molecule,basis,nbf,n_elec,n_iter,e_cueri,e_pyscf,abs_delta_hartree,converged,reference_source
+h2o,sto-3g,7,10,63,-74.9630231384569,-74.96302313846931,1.240607616637135e-11,True,PySCF RHF 2.14.0
+h2o,6-31g,13,10,60,-75.9839744727071,-75.98397447272166,1.4551915228366852e-11,True,PySCF RHF 2.14.0
