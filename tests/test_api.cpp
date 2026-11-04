@@ -10,29 +10,30 @@
 
 static int g_failures = 0;
 
-#define CHECK(cond)                                                       \
-  do {                                                                    \
-    if (!(cond)) {                                                        \
-      std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #cond);         \
-      ++g_failures;                                                       \
-    }                                                                     \
+#define CHECK(cond)                                               \
+  do {                                                            \
+    if (!(cond)) {                                                \
+      std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #cond); \
+      ++g_failures;                                               \
+    }                                                             \
   } while (0)
 
 int main() {
   int major = -1, minor = -1, patch = -1;
   CHECK(cuestGetVersion(&major, &minor, &patch) == CUEST_SUCCESS);
-  CHECK(major == CUEST_VERSION_MAJOR && minor == CUEST_VERSION_MINOR && patch == CUEST_VERSION_PATCH);
+  CHECK(major == CUEST_VERSION_MAJOR && minor == CUEST_VERSION_MINOR &&
+        patch == CUEST_VERSION_PATCH);
   CHECK(cuestGetVersion(nullptr, nullptr, nullptr) == CUEST_SUCCESS);
 
   /* Error-string coverage for every declared status code. */
-  const cuestStatus_t all[] = {CUEST_SUCCESS,       CUEST_INVALID_VALUE, CUEST_NOT_SUPPORTED,
+  const cuestStatus_t all[] = {CUEST_SUCCESS,       CUEST_INVALID_VALUE,   CUEST_NOT_SUPPORTED,
                                CUEST_OUT_OF_MEMORY, CUEST_NUMERICAL_ERROR, CUEST_INTERNAL_ERROR};
   for (cuestStatus_t s : all) {
-    const char *msg = nullptr;
+    const char* msg = nullptr;
     CHECK(cuestGetErrorString(s, &msg) == CUEST_SUCCESS);
     CHECK(msg != nullptr && std::strlen(msg) > 0);
   }
-  const char *unknown = nullptr;
+  const char* unknown = nullptr;
   CHECK(cuestGetErrorString(static_cast<cuestStatus_t>(99), &unknown) == CUEST_SUCCESS);
   CHECK(unknown != nullptr && std::strlen(unknown) > 0);
   CHECK(cuestGetErrorString(CUEST_SUCCESS, nullptr) == CUEST_INVALID_VALUE);
@@ -83,7 +84,8 @@ int main() {
 
   /* Invalid basis names and missing files must fail cleanly. */
   cuestBasis_t bad = nullptr;
-  CHECK(cuestBasisCreateFromFile(handle, mol.c_str(), "no-such-basis", &bad) == CUEST_INVALID_VALUE);
+  CHECK(cuestBasisCreateFromFile(handle, mol.c_str(), "no-such-basis", &bad) ==
+        CUEST_INVALID_VALUE);
   CHECK(bad == nullptr);
   CHECK(cuestBasisCreateFromFile(handle, "/nonexistent/molecule.json", "sto-3g", &bad) ==
         CUEST_INVALID_VALUE);
@@ -94,6 +96,7 @@ int main() {
   CHECK(cuestDestroy(handle) == CUEST_SUCCESS);
   CHECK(cuestDestroy(nullptr) == CUEST_SUCCESS);
 
-  if (g_failures == 0) std::printf("test_api: all checks passed\n");
+  if (g_failures == 0)
+    std::printf("test_api: all checks passed\n");
   return g_failures == 0 ? 0 : 1;
 }

@@ -1,0 +1,14 @@
+{
+ "basis": "unsupported_l",
+ "elements": {
+  "H": {
+   "shells": [
+    {
+     "am": 3,
+     "coefficients": [[1.0]],
+     "exponents": [1.0]
+    }
+   ]
+  }
+ }
+}

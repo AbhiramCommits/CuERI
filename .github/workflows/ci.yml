@@ -1,0 +1,84 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  cpu:
+    name: cpu-${{ matrix.compiler }}-${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        build_type: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc g++ clang libomp-dev
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.compiler == 'gcc' && 'gcc' || 'clang' }}
+          CXX: ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: cmake --build build -j
+
+      - name: CTest
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install numpy scipy pyscf matplotlib pytest
+
+      - name: pytest (ctypes bindings + golden values)
+        run: python3 -m pytest -q tests/python
+
+      - name: PySCF smoke validation (H2O/STO-3G)
+        run: python3 scripts/validate_vs_pyscf.py --smoke
+
+      - name: Upload result CSVs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.compiler }}-${{ matrix.build_type }}
+          path: |
+            results/*.csv
+            results/*.json
+          if-no-files-found: warn
+
+  cuda-compile-only:
+    name: cuda-compile-only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CUDA toolkit (no GPU)
+        uses: Jimver/cuda-toolkit@v0.2.16
+        with:
+          cuda: '12.4.1'
+          method: network
+
+      - name: Configure with CUDA
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCUEST_ENABLE_CUDA=ON
+
+      - name: Compile (keeps the device path from rotting)
+        run: cmake --build build -j
+
+      - name: Show captured ptxas report
+        run: cat results/ptxas_verbose.txt || true
+
+      - name: Upload ptxas report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptxas-verbose
+          path: results/ptxas_verbose.txt
+          if-no-files-found: warn

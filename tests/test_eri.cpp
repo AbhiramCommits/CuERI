@@ -14,14 +14,14 @@
 
 namespace {
 
-const char *class_name(int la, int lb) {
-  static const char *names[3][3] = {{"ss", "sp", "sd"}, {"sp", "pp", "pd"}, {"sd", "pd", "dd"}};
+const char* class_name(int la, int lb) {
+  static const char* names[3][3] = {{"ss", "sp", "sd"}, {"sp", "pp", "pd"}, {"sd", "pd", "dd"}};
   const int a = (la < lb) ? la : lb;
   const int b = (la < lb) ? lb : la;
   return names[a][b];
 }
 
-bool load(const char *molecule, const char *basis_name, cuest::BasisData &basis) {
+bool load(const char* molecule, const char* basis_name, cuest::BasisData& basis) {
   const std::string path = std::string(CUEST_SOURCE_DIR) + "/data/molecules/" + molecule + ".json";
   cuest::Molecule mol;
   std::string err;
@@ -38,7 +38,8 @@ bool load(const char *molecule, const char *basis_name, cuest::BasisData &basis)
 
 int test_h2_analytic() {
   cuest::BasisData basis;
-  if (!load("h2", "sto-3g", basis)) return 1;
+  if (!load("h2", "sto-3g", basis))
+    return 1;
   std::vector<double> eri(static_cast<size_t>(basis.nbf) * basis.nbf * basis.nbf * basis.nbf);
   cuestEriStats_t stats{};
   if (cuest::cpu_eri_tensor(basis, CUEST_FP64, CUEST_ERI_ALGO_MD, 0.0, eri.data(), &stats) !=
@@ -61,17 +62,19 @@ int test_h2_analytic() {
     const double err = std::fabs(got - refs[t]);
     std::printf("  H2 analytic (%d%d|%d%d) = %.16f  ref %.16f  err %.2e\n", idx[t][0], idx[t][1],
                 idx[t][2], idx[t][3], got, refs[t], err);
-    if (err > 1e-12) ++failures;
+    if (err > 1e-12)
+      ++failures;
   }
   return failures;
 }
 
 int test_symmetry() {
   int failures = 0;
-  const char *cases[2][2] = {{"h2o", "sto-3g"}, {"ch4", "6-31g"}};
-  for (auto &c : cases) {
+  const char* cases[2][2] = {{"h2o", "sto-3g"}, {"ch4", "6-31g"}};
+  for (auto& c : cases) {
     cuest::BasisData basis;
-    if (!load(c[0], c[1], basis)) return 1;
+    if (!load(c[0], c[1], basis))
+      return 1;
     const size_t n = basis.nbf;
     std::vector<double> eri(n * n * n * n);
     cuestEriStats_t stats{};
@@ -93,18 +96,20 @@ int test_symmetry() {
             worst = std::max(worst, std::fabs(v - at(j, i, l, k)));
           }
     std::printf("  symmetry %s/%s: max deviation over 8 permutations %.3e\n", c[0], c[1], worst);
-    if (worst > 1e-13) ++failures;
+    if (worst > 1e-13)
+      ++failures;
   }
   return failures;
 }
 
 int test_md_vs_rys() {
   int failures = 0;
-  const char *cases[4][2] = {{"h2o", "sto-3g"}, {"h2o", "6-31g"}, {"h2o", "6-31g*"},
-                             {"ch4", "6-31g"}};
-  for (auto &c : cases) {
+  const char* cases[4][2] = {
+      {"h2o", "sto-3g"}, {"h2o", "6-31g"}, {"h2o", "6-31g*"}, {"ch4", "6-31g"}};
+  for (auto& c : cases) {
     cuest::BasisData basis;
-    if (!load(c[0], c[1], basis)) return 1;
+    if (!load(c[0], c[1], basis))
+      return 1;
     const size_t n = basis.nbf;
     std::vector<double> emd(n * n * n * n), erys(n * n * n * n);
     cuestEriStats_t s1{}, s2{};
@@ -119,27 +124,29 @@ int test_md_vs_rys() {
       for (size_t b = 0; b < basis.shells.size(); ++b)
         for (size_t cc = 0; cc < basis.shells.size(); ++cc)
           for (size_t d = 0; d < basis.shells.size(); ++d) {
-            const cuest::PrimShell &sa = basis.shells[a];
-            const cuest::PrimShell &sb = basis.shells[b];
-            const cuest::PrimShell &sc = basis.shells[cc];
-            const cuest::PrimShell &sd = basis.shells[d];
-            const std::string cls = std::string(class_name(sa.L, sb.L)) + "/" +
-                                    class_name(sc.L, sd.L);
+            const cuest::PrimShell& sa = basis.shells[a];
+            const cuest::PrimShell& sb = basis.shells[b];
+            const cuest::PrimShell& sc = basis.shells[cc];
+            const cuest::PrimShell& sd = basis.shells[d];
+            const std::string cls =
+                std::string(class_name(sa.L, sb.L)) + "/" + class_name(sc.L, sd.L);
             const int ma = sa.nctr * sa.ncomp(), mb = sb.nctr * sb.ncomp();
             const int mc = sc.nctr * sc.ncomp(), md = sd.nctr * sd.ncomp();
             for (int i = 0; i < ma; ++i)
               for (int j = 0; j < mb; ++j)
                 for (int k = 0; k < mc; ++k)
                   for (int l = 0; l < md; ++l) {
-                    const size_t fi = ((static_cast<size_t>(sa.func_offset + i) * n +
-                                        (sb.func_offset + j)) * n + (sc.func_offset + k)) * n +
-                                      (sd.func_offset + l);
+                    const size_t fi =
+                        ((static_cast<size_t>(sa.func_offset + i) * n + (sb.func_offset + j)) * n +
+                         (sc.func_offset + k)) *
+                            n +
+                        (sd.func_offset + l);
                     const double diff = std::fabs(emd[fi] - erys[fi]);
                     worst[cls] = std::max(worst[cls], diff);
                   }
           }
     double all = 0.0;
-    for (auto &kv : worst) {
+    for (auto& kv : worst) {
       all = std::max(all, kv.second);
       std::printf("  MD-vs-Rys %s/%s %-9s max abs diff %.3e\n", c[0], c[1], kv.first.c_str(),
                   kv.second);
@@ -154,11 +161,12 @@ int test_md_vs_rys() {
 
 int test_screening() {
   int failures = 0;
-  const char *cases[2][2] = {{"h2o", "6-31g*"}, {"benzene", "sto-3g"}};
+  const char* cases[2][2] = {{"h2o", "6-31g*"}, {"benzene", "sto-3g"}};
   const double tols[4] = {0.0, 1e-14, 1e-10, 1e-8};
-  for (auto &c : cases) {
+  for (auto& c : cases) {
     cuest::BasisData basis;
-    if (!load(c[0], c[1], basis)) return 1;
+    if (!load(c[0], c[1], basis))
+      return 1;
     const size_t n = basis.nbf;
     std::vector<double> ref(n * n * n * n);
     cuestEriStats_t sref{};
@@ -173,7 +181,8 @@ int test_screening() {
           CUEST_SUCCESS)
         return 1;
       double dev = 0.0;
-      for (size_t k = 0; k < ref.size(); ++k) dev = std::max(dev, std::fabs(ref[k] - got[k]));
+      for (size_t k = 0; k < ref.size(); ++k)
+        dev = std::max(dev, std::fabs(ref[k] - got[k]));
       const double frac = st.quartets_total > 0
                               ? static_cast<double>(st.quartets_screened) / st.quartets_total
                               : 0.0;

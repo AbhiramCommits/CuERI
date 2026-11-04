@@ -41,21 +41,22 @@ int main() {
   std::getline(in, line);  // header
   std::vector<Row> rows;
   while (std::getline(in, line)) {
-    if (line.empty()) continue;
+    if (line.empty())
+      continue;
     std::stringstream ss(line);
     std::string t, n, f;
     std::getline(ss, t, ',');
     std::getline(ss, n, ',');
     std::getline(ss, f, ',');
-    rows.push_back({std::strtod(t.c_str(), nullptr), std::atoi(n.c_str()),
-                    std::strtod(f.c_str(), nullptr)});
+    rows.push_back(
+        {std::strtod(t.c_str(), nullptr), std::atoi(n.c_str()), std::strtod(f.c_str(), nullptr)});
   }
 
   double worst = 0.0;
   double worst_T = 0.0;
   int worst_n = 0;
   int failures = 0;
-  for (const Row &r : rows) {
+  for (const Row& r : rows) {
     const double got = cuest_boys(r.n, r.T);
     const double denom = (std::fabs(r.ref) > 1e-300) ? std::fabs(r.ref) : 1.0;
     const double rel = std::fabs(got - r.ref) / denom;
@@ -94,6 +95,7 @@ int main() {
 
   std::printf("test_boys: %zu values, max relative error %.3e at T=%.6g, n=%d\n", rows.size(),
               worst, worst_T, worst_n);
-  if (failures == 0) std::printf("test_boys: all checks passed\n");
+  if (failures == 0)
+    std::printf("test_boys: all checks passed\n");
   return failures == 0 ? 0 : 1;
 }

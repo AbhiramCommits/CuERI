@@ -18,27 +18,30 @@
 #include "cuest/cuest_eri.h"
 #include "cuest_internal.h"
 
-namespace {
-
 #if CUEST_HAS_CUDA
 #include "cuda/cuda_backend.h"
 #endif
 
-void record_skip(const char *reason) {
+namespace {
+
+void record_skip(const char* reason) {
   std::printf("SKIP test_backend_parity: %s\n", reason);
   const std::string path = std::string(CUEST_SOURCE_DIR) + "/results/backend_parity_skip.txt";
   std::ofstream out(path);
-  if (out) out << "test_backend_parity skipped: " << reason << "\n";
+  if (out)
+    out << "test_backend_parity skipped: " << reason << "\n";
 }
 
 #if CUEST_HAS_CUDA
-int compare_case(const char *molecule, const char *basis_name, double &worst) {
+int compare_case(const char* molecule, const char* basis_name, double& worst) {
   const std::string path = std::string(CUEST_SOURCE_DIR) + "/data/molecules/" + molecule + ".json";
   cuest::Molecule mol;
   std::string err;
-  if (!cuest::load_molecule(path, mol, err)) return 1;
+  if (!cuest::load_molecule(path, mol, err))
+    return 1;
   cuest::BasisData basis;
-  if (!cuest::build_basis(mol, basis_name, basis, err)) return 1;
+  if (!cuest::build_basis(mol, basis_name, basis, err))
+    return 1;
   const size_t n = static_cast<size_t>(basis.nbf);
   std::vector<double> cpu(n * n * n * n), gpu(n * n * n * n);
   cuestEriStats_t st{};
@@ -49,7 +52,8 @@ int compare_case(const char *molecule, const char *basis_name, double &worst) {
       CUEST_SUCCESS)
     return 1;
   double dev = 0.0;
-  for (size_t k = 0; k < cpu.size(); ++k) dev = std::max(dev, std::fabs(cpu[k] - gpu[k]));
+  for (size_t k = 0; k < cpu.size(); ++k)
+    dev = std::max(dev, std::fabs(cpu[k] - gpu[k]));
   worst = std::max(worst, dev);
   std::printf("  parity %s/%s: max |CUDA-CPU| = %.3e\n", molecule, basis_name, dev);
   return dev > 1e-10 ? 1 : 0;
@@ -65,7 +69,8 @@ int main() {
   return 0;
 #else
   cuestHandle_t h = nullptr;
-  if (cuestCreate(&h) != CUEST_SUCCESS) return 1;
+  if (cuestCreate(&h) != CUEST_SUCCESS)
+    return 1;
   cuestBackend_t backend = CUEST_BACKEND_CPU;
   cuestGetBackend(h, &backend);
   if (backend != CUEST_BACKEND_CUDA) {

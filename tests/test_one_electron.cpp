@@ -24,14 +24,14 @@ namespace {
 constexpr double kTolRel = 1e-9;
 constexpr double kTolAbs = 1e-11;
 
-const char *class_name(int la, int lb) {
-  static const char *names[3][3] = {{"ss", "sp", "sd"}, {"sp", "pp", "pd"}, {"sd", "pd", "dd"}};
+const char* class_name(int la, int lb) {
+  static const char* names[3][3] = {{"ss", "sp", "sd"}, {"sp", "pp", "pd"}, {"sd", "pd", "dd"}};
   const int a = (la < lb) ? la : lb;
   const int b = (la < lb) ? lb : la;
   return names[a][b];
 }
 
-int run_case(const char *molecule, const char *basis_name) {
+int run_case(const char* molecule, const char* basis_name) {
   const std::string path = std::string(CUEST_SOURCE_DIR) + "/data/molecules/" + molecule + ".json";
   cuest::Molecule mol;
   std::string err;
@@ -46,10 +46,11 @@ int run_case(const char *molecule, const char *basis_name) {
   }
   const int nbf = basis.nbf;
   cuestHandle_t h = nullptr;
-  if (cuestCreate(&h) != CUEST_SUCCESS) return 1;
+  if (cuestCreate(&h) != CUEST_SUCCESS)
+    return 1;
 
   int failures = 0;
-  const char *matrix_names[3] = {"S", "T", "V"};
+  const char* matrix_names[3] = {"S", "T", "V"};
   for (int which = 0; which < 3; ++which) {
     std::vector<double> lib(static_cast<size_t>(nbf) * nbf, 0.0);
     std::vector<double> ref(static_cast<size_t>(nbf) * nbf, 0.0);
@@ -78,8 +79,8 @@ int run_case(const char *molecule, const char *basis_name) {
     std::map<std::string, std::pair<double, double>> worst;  // class -> (abs, rel)
     for (size_t a = 0; a < basis.shells.size(); ++a) {
       for (size_t b = 0; b < basis.shells.size(); ++b) {
-        const cuest::PrimShell &sa = basis.shells[a];
-        const cuest::PrimShell &sb = basis.shells[b];
+        const cuest::PrimShell& sa = basis.shells[a];
+        const cuest::PrimShell& sb = basis.shells[b];
         const std::string cls = class_name(sa.L, sb.L);
         const int ma = sa.nctr * sa.ncomp();
         const int mb = sb.nctr * sb.ncomp();
@@ -91,9 +92,11 @@ int run_case(const char *molecule, const char *basis_name) {
             const double r = ref[static_cast<size_t>(row) * nbf + col];
             const double ad = std::fabs(l - r);
             const double rd = ad / std::max(std::fabs(r), 1.0);
-            auto &w = worst[cls];
-            if (ad > w.first) w.first = ad;
-            if (rd > w.second) w.second = rd;
+            auto& w = worst[cls];
+            if (ad > w.first)
+              w.first = ad;
+            if (rd > w.second)
+              w.second = rd;
             if (!(ad <= kTolAbs || rd <= kTolRel)) {
               std::printf("FAIL: %s %s[%d,%d] lib=%.17g ref=%.17g\n", matrix_names[which],
                           cls.c_str(), row, col, l, r);
@@ -103,7 +106,7 @@ int run_case(const char *molecule, const char *basis_name) {
         }
       }
     }
-    for (const auto &kv : worst) {
+    for (const auto& kv : worst) {
       std::printf("  %s/%s %-2s  max abs %.3e  max rel %.3e\n", molecule, basis_name,
                   kv.first.c_str(), kv.second.first, kv.second.second);
     }
