@@ -1,0 +1,43 @@
+{
+ "name": "stress",
+ "description": "stress: two nearly coincident H2 fragments (separation 1e-7 bohr)",
+ "units": "bohr",
+ "atoms": [
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    1.89e-07,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    0.0,
+    0.0,
+    2.6456165745
+   ]
+  },
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    0.0,
+    1.89e-07,
+    2.6456165745
+   ]
+  }
+ ]
+}

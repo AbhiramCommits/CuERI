@@ -1,0 +1,30 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+install/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Shared libraries / objects
+*.so
+*.dylib
+*.dll
+*.o
+*.a
+
+# Profiling artefacts
+*.ncu-rep
+*.nsys-rep
+*.qdrep
+*.sqlite
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/

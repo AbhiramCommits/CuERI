@@ -1,0 +1,20 @@
+{
+  "timestamp_utc": "2026-11-04T01:39:30Z",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "os": "Darwin",
+  "cpu_model": "Apple M3",
+  "cpu_logical_cores": 8,
+  "memory_bytes": 17179869184,
+  "compiler_cxx": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "compiler_cc": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "cmake_version": "cmake version 4.3.3",
+  "python_version": "3.14.2",
+  "nvcc_version": "none",
+  "gpu_model": "none",
+  "cuda_toolkit_present": false,
+  "gpu_present": false,
+  "tier": "C",
+  "tier_text": "Tier C: no CUDA toolkit; CPU backend only",
+  "notes": "GPU kernel timings and Nsight Compute metrics are only measured at Tier A. At Tier B the CUDA sources compile and ptxas register/spill counts are real; all numerics and timings come from the CPU backend. At Tier C the CUDA sources are not compiled at all."
+}

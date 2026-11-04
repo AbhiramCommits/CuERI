@@ -1,0 +1,175 @@
+{
+ "basis": "sto-3g",
+ "cartesian": true,
+ "elements": {
+  "C": {
+   "shells": [
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       0.15432897,
+       0.53532814,
+       0.44463454
+      ]
+     ],
+     "exponents": [
+      71.616837,
+      13.045096,
+      3.5305122
+     ]
+    },
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       -0.09996723,
+       0.39951283,
+       0.70011547
+      ]
+     ],
+     "exponents": [
+      2.9412494,
+      0.6834831,
+      0.2222899
+     ]
+    },
+    {
+     "am": 1,
+     "coefficients": [
+      [
+       0.15591627,
+       0.60768372,
+       0.39195739
+      ]
+     ],
+     "exponents": [
+      2.9412494,
+      0.6834831,
+      0.2222899
+     ]
+    }
+   ]
+  },
+  "H": {
+   "shells": [
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       0.15432897,
+       0.53532814,
+       0.44463454
+      ]
+     ],
+     "exponents": [
+      3.42525091,
+      0.62391373,
+      0.1688554
+     ]
+    }
+   ]
+  },
+  "N": {
+   "shells": [
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       0.15432897,
+       0.53532814,
+       0.44463454
+      ]
+     ],
+     "exponents": [
+      99.106169,
+      18.052312,
+      4.8856602
+     ]
+    },
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       -0.09996723,
+       0.39951283,
+       0.70011547
+      ]
+     ],
+     "exponents": [
+      3.7804559,
+      0.8784966,
+      0.2857144
+     ]
+    },
+    {
+     "am": 1,
+     "coefficients": [
+      [
+       0.15591627,
+       0.60768372,
+       0.39195739
+      ]
+     ],
+     "exponents": [
+      3.7804559,
+      0.8784966,
+      0.2857144
+     ]
+    }
+   ]
+  },
+  "O": {
+   "shells": [
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       0.15432897,
+       0.53532814,
+       0.44463454
+      ]
+     ],
+     "exponents": [
+      130.70932,
+      23.808861,
+      6.4436083
+     ]
+    },
+    {
+     "am": 0,
+     "coefficients": [
+      [
+       -0.09996723,
+       0.39951283,
+       0.70011547
+      ]
+     ],
+     "exponents": [
+      5.0331513,
+      1.1695961,
+      0.380389
+     ]
+    },
+    {
+     "am": 1,
+     "coefficients": [
+      [
+       0.15591627,
+       0.60768372,
+       0.39195739
+      ]
+     ],
+     "exponents": [
+      5.0331513,
+      1.1695961,
+      0.380389
+     ]
+    }
+   ]
+  }
+ },
+ "generator": "scripts/dump_basis.py",
+ "note": "Coefficients are the raw PySCF contraction coefficients. The C++ loader multiplies each primitive by N(l,alpha) = (2 alpha/pi)^(3/4) (4 alpha)^(l/2)/sqrt((2l-1)!!) and then rescales each Cartesian component to unit self-overlap.",
+ "pyscf_version": "2.14.0"
+}

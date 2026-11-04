@@ -1,0 +1,25 @@
+{
+ "name": "h2",
+ "description": "H2, r(H-H) = 0.7414 Angstrom",
+ "units": "bohr",
+ "atoms": [
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "element": "H",
+   "Z": 1,
+   "xyz": [
+    0.0,
+    0.0,
+    1.4010429488
+   ]
+  }
+ ]
+}
