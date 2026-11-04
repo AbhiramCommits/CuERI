@@ -1,10 +1,10 @@
-cuERI test summary (2026-11-04T02:13:02Z)
+cuERI test summary (2026-11-04T02:13:29Z)
 
 CTest:
 
 100% tests passed, 0 tests failed out of 8
 
-Total Test time (real) =   2.87 sec
+Total Test time (real) =   3.17 sec
 
 pytest:
-9 passed in 0.12s
+9 passed in 0.08s

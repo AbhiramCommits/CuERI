@@ -120,10 +120,12 @@ def main() -> int:
         reason = ("Tier C build: no CUDA toolkit and no NVIDIA GPU on the build machine; "
                   "no kernel was compiled or run, so registers, spills and occupancy do not exist")
         for cls in CLASSES:
-            rows.append(dict(angular_class=cls, status="not measured", registers_per_thread="",
-                             occupancy_pct="", memory_throughput_pct="", sm_throughput_pct="",
-                             spill_stores="", spill_loads="", blocks_per_sm="",
-                             shared_memory_bytes="", note=reason))
+            rows.append(dict(angular_class=cls, status="not measured",
+                             registers_per_thread=NOT_MEASURED, occupancy_pct=NOT_MEASURED,
+                             memory_throughput_pct=NOT_MEASURED, sm_throughput_pct=NOT_MEASURED,
+                             spill_stores=NOT_MEASURED, spill_loads=NOT_MEASURED,
+                             blocks_per_sm=NOT_MEASURED, shared_memory_bytes=NOT_MEASURED,
+                             note=reason))
         with open(os.path.join(ROOT, "results", "ptxas_verbose.txt"), "w", encoding="utf-8") as fh:
             fh.write("results/ptxas_verbose.txt\n")
             fh.write("=======================\n")

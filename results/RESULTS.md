@@ -164,27 +164,27 @@ Median wall time over three passes after one warm-up; screen tolerance 1e-10.
 
 | molecule | basis | nbf | ERI cpu-1thread / ms | ERI cpu-openmp / ms | speedup | integrals/s (openmp) |
 |---|---|---|---|---|---|---|
-| benzene | 6-31g | 66 | 5030.45 | 1136.10 | 4.43x | 1.670e+07 |
-| benzene | 6-31g* | 102 | 9381.26 | 1909.34 | 4.91x | 5.669e+07 |
-| benzene | sto-3g | 36 | 1377.56 | 250.47 | 5.50x | 6.706e+06 |
-| ch4 | 6-31g | 17 | 40.21 | 8.44 | 4.76x | 9.897e+06 |
-| h2 | sto-3g | 2 | 0.17 | 0.14 | 1.18x | 1.129e+05 |
-| h2o | 6-31g | 13 | 14.06 | 2.77 | 5.08x | 1.033e+07 |
-| h2o | 6-31g* | 19 | 20.65 | 4.17 | 4.95x | 3.123e+07 |
-| h2o | sto-3g | 7 | 3.85 | 0.97 | 3.98x | 2.482e+06 |
+| benzene | 6-31g | 66 | 4879.97 | 1044.14 | 4.67x | 1.817e+07 |
+| benzene | 6-31g* | 102 | 9376.08 | 1919.06 | 4.89x | 5.640e+07 |
+| benzene | sto-3g | 36 | 1309.74 | 252.44 | 5.19x | 6.654e+06 |
+| ch4 | 6-31g | 17 | 40.07 | 7.90 | 5.07x | 1.057e+07 |
+| h2 | sto-3g | 2 | 0.22 | 0.24 | 0.92x | 6.664e+04 |
+| h2o | 6-31g | 13 | 13.98 | 2.94 | 4.75x | 9.699e+06 |
+| h2o | 6-31g* | 19 | 20.83 | 4.16 | 5.01x | 3.135e+07 |
+| h2o | sto-3g | 7 | 4.44 | 1.07 | 4.15x | 2.243e+06 |
 
 MD vs Rys (cpu-openmp, fp64):
 
 | molecule | basis | MD / ms | Rys / ms | Rys/MD |
 |---|---|---|---|---|
-| benzene | 6-31g | 1136.10 | 1431.44 | 1.26 |
-| benzene | 6-31g* | 1909.34 | 2831.03 | 1.48 |
-| benzene | sto-3g | 250.47 | 346.53 | 1.38 |
-| ch4 | 6-31g | 8.44 | 8.85 | 1.05 |
-| h2 | sto-3g | 0.14 | 0.14 | 1.02 |
-| h2o | 6-31g | 2.77 | 3.24 | 1.17 |
-| h2o | 6-31g* | 4.17 | 6.14 | 1.47 |
-| h2o | sto-3g | 0.97 | 1.31 | 1.36 |
+| benzene | 6-31g | 1044.14 | 1242.35 | 1.19 |
+| benzene | 6-31g* | 1919.06 | 2863.53 | 1.49 |
+| benzene | sto-3g | 252.44 | 312.61 | 1.24 |
+| ch4 | 6-31g | 7.90 | 8.83 | 1.12 |
+| h2 | sto-3g | 0.24 | 0.18 | 0.76 |
+| h2o | 6-31g | 2.94 | 3.27 | 1.11 |
+| h2o | 6-31g* | 4.16 | 5.74 | 1.38 |
+| h2o | sto-3g | 1.07 | 1.54 | 1.44 |
 
 CUDA rows: 0 measured, 32 not measured. Unmeasured cells read "not measured (no GPU on build machine)".
 
@@ -194,26 +194,26 @@ Rows: 20; statuses: not measured.
 
 | angular class | status | registers/thread | occupancy | memory throughput | SM throughput |
 |---|---|---|---|---|---|
-| ss-ss | not measured | - | - | - | - |
-| ss-sp | not measured | - | - | - | - |
-| ss-pp | not measured | - | - | - | - |
-| sp-sp | not measured | - | - | - | - |
-| sp-pp | not measured | - | - | - | - |
-| pp-pp | not measured | - | - | - | - |
-| ss-sd | not measured | - | - | - | - |
-| sp-sd | not measured | - | - | - | - |
-| pp-sd | not measured | - | - | - | - |
-| sd-sd | not measured | - | - | - | - |
-| ss-pd | not measured | - | - | - | - |
-| sp-pd | not measured | - | - | - | - |
-| pp-pd | not measured | - | - | - | - |
-| pd-pd | not measured | - | - | - | - |
-| ss-dd | not measured | - | - | - | - |
-| sp-dd | not measured | - | - | - | - |
-| pp-dd | not measured | - | - | - | - |
-| sd-dd | not measured | - | - | - | - |
-| pd-dd | not measured | - | - | - | - |
-| dd-dd | not measured | - | - | - | - |
+| ss-ss | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| ss-sp | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| ss-pp | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sp-sp | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sp-pp | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pp-pp | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| ss-sd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sp-sd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pp-sd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sd-sd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| ss-pd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sp-pd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pp-pd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pd-pd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| ss-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sp-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pp-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| sd-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| pd-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
+| dd-dd | not measured | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) | not measured (no GPU on build machine) |
 
 Reason: Tier C build: no CUDA toolkit and no NVIDIA GPU on the build machine; no kernel was compiled or run, so registers, spills and occupancy do not exist.
 

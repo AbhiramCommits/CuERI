@@ -348,6 +348,7 @@ namespace {
 
 struct QuartetDesc {
   int i, j, k, l;
+  int cls; /* angular-momentum class, used to batch quartets of uniform work */
 };
 
 template <typename T>
@@ -448,9 +449,17 @@ cuestStatus_t run_eri_tensor(const BasisData& basis, cuestEriAlgo_t algo, double
       q.j = pairs[a].j;
       q.k = pairs[b].i;
       q.l = pairs[b].j;
+      q.cls = am_class(basis.shells[static_cast<size_t>(q.i)].L,
+                       basis.shells[static_cast<size_t>(q.j)].L,
+                       basis.shells[static_cast<size_t>(q.k)].L,
+                       basis.shells[static_cast<size_t>(q.l)].L);
       quartets.push_back(q);
     }
   }
+
+  /* Batch by angular-momentum class so neighbouring iterations do uniform work. */
+  std::stable_sort(quartets.begin(), quartets.end(),
+                   [](const QuartetDesc &a, const QuartetDesc &b) { return a.cls < b.cls; });
 
   const long nq = static_cast<long>(quartets.size());
   long long prim_total = 0;

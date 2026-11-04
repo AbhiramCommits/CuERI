@@ -80,9 +80,11 @@ int main() {
   }
   double worst = 0.0;
   int failures = 0;
-  failures += compare_case("h2o", "sto-3g", worst);
-  failures += compare_case("ch4", "6-31g", worst);
-  failures += compare_case("h2o", "6-31g*", worst);
+  const char *cases[][2] = {{"h2", "sto-3g"},   {"h2o", "sto-3g"},   {"h2o", "6-31g"},
+                            {"h2o", "6-31g*"},  {"ch4", "sto-3g"},  {"ch4", "6-31g"},
+                            {"ch4", "6-31g*"},  {"benzene", "sto-3g"}, {"benzene", "6-31g"},
+                            {"benzene", "6-31g*"}};
+  for (const auto &c : cases) failures += compare_case(c[0], c[1], worst);
   cuestDestroy(h);
   std::printf("test_backend_parity: %s (worst %.3e)\n", failures == 0 ? "passed" : "FAILED", worst);
   return failures == 0 ? 0 : 1;
