@@ -64,8 +64,8 @@ CUEST_HD T cuest_prim_eri_md(const int la[3], const int lb[3], const int lc[3], 
   const T alpha = p * q / (p + q);
   T PQ[3] = {P[0] - Q[0], P[1] - Q[1], P[2] - Q[2]};
   const T Tval = alpha * (PQ[0] * PQ[0] + PQ[1] * PQ[1] + PQ[2] * PQ[2]);
-  const int lmax = la[0] + la[1] + la[2] + lb[0] + lb[1] + lb[2] + lc[0] + lc[1] + lc[2] + ld[0] +
-                   ld[1] + ld[2];
+  const int lmax =
+      la[0] + la[1] + la[2] + lb[0] + lb[1] + lb[2] + lc[0] + lc[1] + lc[2] + ld[0] + ld[1] + ld[2];
   T R[CUEST_RDIM * CUEST_RDIM * CUEST_RDIM];
   cuest_md_Rtable<T>(lmax, alpha, PQ, Tval, R);
 
@@ -88,8 +88,7 @@ CUEST_HD T cuest_prim_eri_md(const int la[3], const int lb[3], const int lc[3], 
     }
   }
 
-  const T pre = T(CUEST_TWO_PI_5_2) /
-                (p * q * T(sqrt(static_cast<double>(p + q))));
+  const T pre = T(CUEST_TWO_PI_5_2) / (p * q * T(sqrt(static_cast<double>(p + q))));
   return pre * K1 * K2 * sum;
 }
 

@@ -22,7 +22,7 @@
 namespace cuest {
 namespace {
 
-__device__ inline void cart_component_dev(int l, int idx, int *lx, int *ly, int *lz) {
+__device__ inline void cart_component_dev(int l, int idx, int* lx, int* ly, int* lz) {
   int k = 0;
   for (int ix = l; ix >= 0; --ix)
     for (int iy = l - ix; iy >= 0; --iy) {
@@ -37,9 +37,9 @@ __device__ inline void cart_component_dev(int l, int idx, int *lx, int *ly, int 
 }
 
 template <typename T>
-__device__ inline T device_prim_eri(const DeviceBasis &db, int si, int sj, int sk, int sl, int ica,
-                                   int icb, int icc, int icd, int ka, int kb, int kc, int kd,
-                                   int pa, int pb, int pc, int pd, int algo) {
+__device__ inline T device_prim_eri(const DeviceBasis& db, int si, int sj, int sk, int sl, int ica,
+                                    int icb, int icc, int icd, int ka, int kb, int kc, int kd,
+                                    int pa, int pb, int pc, int pd, int algo) {
   const int Li = db.shell_L[si], Lj = db.shell_L[sj], Lk = db.shell_L[sk], Ll = db.shell_L[sl];
   int la[3], lb[3], lc[3], ld[3];
   cart_component_dev(Li, ka, &la[0], &la[1], &la[2]);
@@ -48,10 +48,10 @@ __device__ inline T device_prim_eri(const DeviceBasis &db, int si, int sj, int s
   cart_component_dev(Ll, kd, &ld[0], &ld[1], &ld[2]);
 
   T A[3], B[3], C[3], D[3];
-  const double *ca = &db.centers[3 * db.shell_atom[si]];
-  const double *cb = &db.centers[3 * db.shell_atom[sj]];
-  const double *cc = &db.centers[3 * db.shell_atom[sk]];
-  const double *cd = &db.centers[3 * db.shell_atom[sl]];
+  const double* ca = &db.centers[3 * db.shell_atom[si]];
+  const double* cb = &db.centers[3 * db.shell_atom[sj]];
+  const double* cc = &db.centers[3 * db.shell_atom[sk]];
+  const double* cd = &db.centers[3 * db.shell_atom[sl]];
   for (int k = 0; k < 3; ++k) {
     A[k] = T(ca[k]);
     B[k] = T(cb[k]);
@@ -81,7 +81,7 @@ __device__ inline T device_prim_eri(const DeviceBasis &db, int si, int sj, int s
 }
 
 template <typename T>
-__device__ inline T device_prim_1e(const DeviceBasis &db, int si, int sj, int which, int ica,
+__device__ inline T device_prim_1e(const DeviceBasis& db, int si, int sj, int which, int ica,
                                    int icb, int ka, int kb, int pa, int pb) {
   const int Li = db.shell_L[si], Lj = db.shell_L[sj];
   int la[3], lb[3];
@@ -112,7 +112,8 @@ __device__ inline T device_prim_1e(const DeviceBasis &db, int si, int sj, int wh
   } else {
     for (int at = 0; at < db.natoms; ++at) {
       T PC[3];
-      for (int k = 0; k < 3; ++k) PC[k] = P[k] - T(db.centers[3 * at + k]);
+      for (int k = 0; k < 3; ++k)
+        PC[k] = P[k] - T(db.centers[3 * at + k]);
       val += cuest_prim_nuclear<T>(la, lb, p, PA, PB, K, PC, T(db.charges[at]));
     }
   }
@@ -122,14 +123,14 @@ __device__ inline T device_prim_1e(const DeviceBasis &db, int si, int sj, int wh
   return ca * cb * val;
 }
 
-__device__ inline void scatter8(DeviceBasis db, const QuartetDev &q, int fa, int fb, int fc, int fd,
-                                double value, double *eri, int nbf) {
+__device__ inline void scatter8(DeviceBasis db, const QuartetDev& q, int fa, int fb, int fc, int fd,
+                                double value, double* eri, int nbf) {
   const int sh[4] = {q.i, q.j, q.k, q.l};
   const int f[4] = {fa, fb, fc, fd};
   const int perms[8][4] = {{0, 1, 2, 3}, {1, 0, 2, 3}, {0, 1, 3, 2}, {1, 0, 3, 2},
                            {2, 3, 0, 1}, {3, 2, 0, 1}, {2, 3, 1, 0}, {3, 2, 1, 0}};
   for (int ip = 0; ip < 8; ++ip) {
-    const int *pm = perms[ip];
+    const int* pm = perms[ip];
     const size_t g0 = static_cast<size_t>(db.shell_func_off[sh[pm[0]]] + f[pm[0]]);
     const size_t g1 = static_cast<size_t>(db.shell_func_off[sh[pm[1]]] + f[pm[1]]);
     const size_t g2 = static_cast<size_t>(db.shell_func_off[sh[pm[2]]] + f[pm[2]]);
@@ -139,10 +140,11 @@ __device__ inline void scatter8(DeviceBasis db, const QuartetDev &q, int fa, int
 }
 
 template <typename T, int LA, int LB, int LC, int LD>
-__global__ void cuest_eri_kernel(DeviceBasis db, const QuartetDev *quartets, int nq, double *eri,
+__global__ void cuest_eri_kernel(DeviceBasis db, const QuartetDev* quartets, int nq, double* eri,
                                  int nbf, int algo) {
   const int qi = blockIdx.x;
-  if (qi >= nq) return;
+  if (qi >= nq)
+    return;
   const QuartetDev q = quartets[qi];
   const int nca = cuest_num_cart(LA), ncb = cuest_num_cart(LB);
   const int ncc = cuest_num_cart(LC), ncd = cuest_num_cart(LD);
@@ -173,10 +175,11 @@ __global__ void cuest_eri_kernel(DeviceBasis db, const QuartetDev *quartets, int
 }
 
 template <typename T>
-__global__ void cuest_one_electron_kernel(DeviceBasis db, int which, double *out, int ld,
+__global__ void cuest_one_electron_kernel(DeviceBasis db, int which, double* out, int ld,
                                           int npairs) {
   const int ip = blockIdx.x;
-  if (ip >= npairs) return;
+  if (ip >= npairs)
+    return;
   /* Unordered shell pair list reconstructed on the fly: pair index ip maps to a
      unique (i>=j) pair. */
   int i = 0, j = 0, k = 0;
@@ -188,7 +191,8 @@ __global__ void cuest_one_electron_kernel(DeviceBasis db, int which, double *out
     }
     k += n;
   }
-  if (i >= db.nshells) return;
+  if (i >= db.nshells)
+    return;
   const int Li = db.shell_L[i], Lj = db.shell_L[j];
   const int nca = cuest_num_cart(Li), ncb = cuest_num_cart(Lj);
   const int ma = db.shell_nctr[i] * nca, mb = db.shell_nctr[j] * ncb;
@@ -203,13 +207,15 @@ __global__ void cuest_one_electron_kernel(DeviceBasis db, int which, double *out
     const int row = db.shell_func_off[i] + fa;
     const int col = db.shell_func_off[j] + fb;
     out[static_cast<size_t>(row) * ld + col] = static_cast<double>(val);
-    if (i != j) out[static_cast<size_t>(col) * ld + row] = static_cast<double>(val);
+    if (i != j)
+      out[static_cast<size_t>(col) * ld + row] = static_cast<double>(val);
   }
 }
 
-__global__ void cuest_schwarz_kernel(DeviceBasis db, double *q_pair, int npairs) {
+__global__ void cuest_schwarz_kernel(DeviceBasis db, double* q_pair, int npairs) {
   const int ip = blockIdx.x;
-  if (ip >= npairs) return;
+  if (ip >= npairs)
+    return;
   int i = 0, j = 0, k = 0;
   for (i = 0; i < db.nshells; ++i) {
     const int n = i + 1;
@@ -219,7 +225,8 @@ __global__ void cuest_schwarz_kernel(DeviceBasis db, double *q_pair, int npairs)
     }
     k += n;
   }
-  if (i >= db.nshells) return;
+  if (i >= db.nshells)
+    return;
   const int Li = db.shell_L[i], Lj = db.shell_L[j];
   const int nca = cuest_num_cart(Li), ncb = cuest_num_cart(Lj);
   const int ma = db.shell_nctr[i] * nca, mb = db.shell_nctr[j] * ncb;
@@ -240,7 +247,7 @@ __global__ void cuest_schwarz_kernel(DeviceBasis db, double *q_pair, int npairs)
     for (int pa = 0; pa < db.shell_nprim[i]; ++pa)
       for (int pb = 0; pb < db.shell_nprim[j]; ++pb)
         val += static_cast<double>(device_prim_eri<double>(db, i, j, i, j, ica, icb, icc, icd, ka,
-                                                          kb, kc, kd, pa, pb, pa, pb, 0));
+                                                           kb, kc, kd, pa, pb, pa, pb, 0));
     best = fmax(best, fabs(val));
   }
   /* block reduction */
@@ -248,7 +255,8 @@ __global__ void cuest_schwarz_kernel(DeviceBasis db, double *q_pair, int npairs)
   smem[threadIdx.x] = best;
   __syncthreads();
   for (int s = blockDim.x / 2; s > 0; s >>= 1) {
-    if (threadIdx.x < s) smem[threadIdx.x] = fmax(smem[threadIdx.x], smem[threadIdx.x + s]);
+    if (threadIdx.x < s)
+      smem[threadIdx.x] = fmax(smem[threadIdx.x], smem[threadIdx.x + s]);
     __syncthreads();
   }
   if (threadIdx.x == 0) {
@@ -264,10 +272,11 @@ __global__ void cuest_schwarz_kernel(DeviceBasis db, double *q_pair, int npairs)
 /* Host-side launchers                                                 */
 /* ------------------------------------------------------------------ */
 
-int cuest_cuda_launch_one_electron(const DeviceBasis &db, int which, bool fp32, double *out, int ld,
+int cuest_cuda_launch_one_electron(const DeviceBasis& db, int which, bool fp32, double* out, int ld,
                                    int nwork) {
   const int npairs = db.nshells * (db.nshells + 1) / 2;
-  if (npairs <= 0) return 0;
+  if (npairs <= 0)
+    return 0;
   if (fp32)
     cuest_one_electron_kernel<float><<<npairs, 128>>>(db, which, out, ld, npairs);
   else
@@ -276,19 +285,23 @@ int cuest_cuda_launch_one_electron(const DeviceBasis &db, int which, bool fp32, 
   return static_cast<int>(cudaGetLastError());
 }
 
-int cuest_cuda_launch_schwarz(const DeviceBasis &db, double *q_pair) {
+int cuest_cuda_launch_schwarz(const DeviceBasis& db, double* q_pair) {
   const int npairs = db.nshells * (db.nshells + 1) / 2;
-  if (npairs <= 0) return 0;
+  if (npairs <= 0)
+    return 0;
   cuest_schwarz_kernel<<<npairs, 128>>>(db, q_pair, npairs);
   return static_cast<int>(cudaGetLastError());
 }
 
-int cuest_cuda_launch_eri(const DeviceBasis &db, const QuartetDev *host_quartets, int nq, bool fp32,
-                          int algo, double *eri, size_t *screened_out) {
-  if (nq <= 0) return 0;
-  QuartetDev *dq = nullptr;
-  if (cudaMalloc(&dq, sizeof(QuartetDev) * nq) != cudaSuccess) return 1;
-  if (cudaMemcpy(dq, host_quartets, sizeof(QuartetDev) * nq, cudaMemcpyHostToDevice) != cudaSuccess) {
+int cuest_cuda_launch_eri(const DeviceBasis& db, const QuartetDev* host_quartets, int nq, bool fp32,
+                          int algo, double* eri, size_t* screened_out) {
+  if (nq <= 0)
+    return 0;
+  QuartetDev* dq = nullptr;
+  if (cudaMalloc(&dq, sizeof(QuartetDev) * nq) != cudaSuccess)
+    return 1;
+  if (cudaMemcpy(dq, host_quartets, sizeof(QuartetDev) * nq, cudaMemcpyHostToDevice) !=
+      cudaSuccess) {
     cudaFree(dq);
     return 1;
   }
@@ -301,114 +314,278 @@ int cuest_cuda_launch_eri(const DeviceBasis &db, const QuartetDev *host_quartets
       const int lb = db.shell_L[host_quartets[k].j];
       const int lc = db.shell_L[host_quartets[k].k];
       const int ld = db.shell_L[host_quartets[k].l];
-      if (((la * 3 + lb) * 3 + lc) * 3 + ld == cls) bucket.push_back(host_quartets[k]);
+      if (((la * 3 + lb) * 3 + lc) * 3 + ld == cls)
+        bucket.push_back(host_quartets[k]);
     }
-    if (bucket.empty()) continue;
-    QuartetDev *dqb = nullptr;
+    if (bucket.empty())
+      continue;
+    QuartetDev* dqb = nullptr;
     if (cudaMalloc(&dqb, sizeof(QuartetDev) * bucket.size()) != cudaSuccess) {
       cudaFree(dq);
       return 1;
     }
     cudaMemcpy(dqb, bucket.data(), sizeof(QuartetDev) * bucket.size(), cudaMemcpyHostToDevice);
     const int ni = static_cast<int>(bucket.size());
-#define CUEST_LAUNCH(LA, LB, LC, LD)                                                        \
-  do {                                                                                      \
-    if (fp32)                                                                               \
-      cuest_eri_kernel<float, LA, LB, LC, LD>                                               \
-          <<<ni, 128>>>(db, dqb, ni, eri, db.nbf, algo);                                    \
-    else                                                                                    \
-      cuest_eri_kernel<double, LA, LB, LC, LD>                                              \
-          <<<ni, 128>>>(db, dqb, ni, eri, db.nbf, algo);                                    \
+#define CUEST_LAUNCH(LA, LB, LC, LD)                                                         \
+  do {                                                                                       \
+    if (fp32)                                                                                \
+      cuest_eri_kernel<float, LA, LB, LC, LD><<<ni, 128>>>(db, dqb, ni, eri, db.nbf, algo);  \
+    else                                                                                     \
+      cuest_eri_kernel<double, LA, LB, LC, LD><<<ni, 128>>>(db, dqb, ni, eri, db.nbf, algo); \
   } while (0)
     switch (cls) {
-      case 0: CUEST_LAUNCH(0, 0, 0, 0); break;
-      case 1: CUEST_LAUNCH(0, 0, 0, 1); break;
-      case 2: CUEST_LAUNCH(0, 0, 0, 2); break;
-      case 3: CUEST_LAUNCH(0, 0, 1, 0); break;
-      case 4: CUEST_LAUNCH(0, 0, 1, 1); break;
-      case 5: CUEST_LAUNCH(0, 0, 1, 2); break;
-      case 6: CUEST_LAUNCH(0, 0, 2, 0); break;
-      case 7: CUEST_LAUNCH(0, 0, 2, 1); break;
-      case 8: CUEST_LAUNCH(0, 0, 2, 2); break;
-      case 9: CUEST_LAUNCH(0, 1, 0, 0); break;
-      case 10: CUEST_LAUNCH(0, 1, 0, 1); break;
-      case 11: CUEST_LAUNCH(0, 1, 0, 2); break;
-      case 12: CUEST_LAUNCH(0, 1, 1, 0); break;
-      case 13: CUEST_LAUNCH(0, 1, 1, 1); break;
-      case 14: CUEST_LAUNCH(0, 1, 1, 2); break;
-      case 15: CUEST_LAUNCH(0, 1, 2, 0); break;
-      case 16: CUEST_LAUNCH(0, 1, 2, 1); break;
-      case 17: CUEST_LAUNCH(0, 1, 2, 2); break;
-      case 18: CUEST_LAUNCH(0, 2, 0, 0); break;
-      case 19: CUEST_LAUNCH(0, 2, 0, 1); break;
-      case 20: CUEST_LAUNCH(0, 2, 0, 2); break;
-      case 21: CUEST_LAUNCH(0, 2, 1, 0); break;
-      case 22: CUEST_LAUNCH(0, 2, 1, 1); break;
-      case 23: CUEST_LAUNCH(0, 2, 1, 2); break;
-      case 24: CUEST_LAUNCH(0, 2, 2, 0); break;
-      case 25: CUEST_LAUNCH(0, 2, 2, 1); break;
-      case 26: CUEST_LAUNCH(0, 2, 2, 2); break;
-      case 27: CUEST_LAUNCH(1, 0, 0, 0); break;
-      case 28: CUEST_LAUNCH(1, 0, 0, 1); break;
-      case 29: CUEST_LAUNCH(1, 0, 0, 2); break;
-      case 30: CUEST_LAUNCH(1, 0, 1, 0); break;
-      case 31: CUEST_LAUNCH(1, 0, 1, 1); break;
-      case 32: CUEST_LAUNCH(1, 0, 1, 2); break;
-      case 33: CUEST_LAUNCH(1, 0, 2, 0); break;
-      case 34: CUEST_LAUNCH(1, 0, 2, 1); break;
-      case 35: CUEST_LAUNCH(1, 0, 2, 2); break;
-      case 36: CUEST_LAUNCH(1, 1, 0, 0); break;
-      case 37: CUEST_LAUNCH(1, 1, 0, 1); break;
-      case 38: CUEST_LAUNCH(1, 1, 0, 2); break;
-      case 39: CUEST_LAUNCH(1, 1, 1, 0); break;
-      case 40: CUEST_LAUNCH(1, 1, 1, 1); break;
-      case 41: CUEST_LAUNCH(1, 1, 1, 2); break;
-      case 42: CUEST_LAUNCH(1, 1, 2, 0); break;
-      case 43: CUEST_LAUNCH(1, 1, 2, 1); break;
-      case 44: CUEST_LAUNCH(1, 1, 2, 2); break;
-      case 45: CUEST_LAUNCH(1, 2, 0, 0); break;
-      case 46: CUEST_LAUNCH(1, 2, 0, 1); break;
-      case 47: CUEST_LAUNCH(1, 2, 0, 2); break;
-      case 48: CUEST_LAUNCH(1, 2, 1, 0); break;
-      case 49: CUEST_LAUNCH(1, 2, 1, 1); break;
-      case 50: CUEST_LAUNCH(1, 2, 1, 2); break;
-      case 51: CUEST_LAUNCH(1, 2, 2, 0); break;
-      case 52: CUEST_LAUNCH(1, 2, 2, 1); break;
-      case 53: CUEST_LAUNCH(1, 2, 2, 2); break;
-      case 54: CUEST_LAUNCH(2, 0, 0, 0); break;
-      case 55: CUEST_LAUNCH(2, 0, 0, 1); break;
-      case 56: CUEST_LAUNCH(2, 0, 0, 2); break;
-      case 57: CUEST_LAUNCH(2, 0, 1, 0); break;
-      case 58: CUEST_LAUNCH(2, 0, 1, 1); break;
-      case 59: CUEST_LAUNCH(2, 0, 1, 2); break;
-      case 60: CUEST_LAUNCH(2, 0, 2, 0); break;
-      case 61: CUEST_LAUNCH(2, 0, 2, 1); break;
-      case 62: CUEST_LAUNCH(2, 0, 2, 2); break;
-      case 63: CUEST_LAUNCH(2, 1, 0, 0); break;
-      case 64: CUEST_LAUNCH(2, 1, 0, 1); break;
-      case 65: CUEST_LAUNCH(2, 1, 0, 2); break;
-      case 66: CUEST_LAUNCH(2, 1, 1, 0); break;
-      case 67: CUEST_LAUNCH(2, 1, 1, 1); break;
-      case 68: CUEST_LAUNCH(2, 1, 1, 2); break;
-      case 69: CUEST_LAUNCH(2, 1, 2, 0); break;
-      case 70: CUEST_LAUNCH(2, 1, 2, 1); break;
-      case 71: CUEST_LAUNCH(2, 1, 2, 2); break;
-      case 72: CUEST_LAUNCH(2, 2, 0, 0); break;
-      case 73: CUEST_LAUNCH(2, 2, 0, 1); break;
-      case 74: CUEST_LAUNCH(2, 2, 0, 2); break;
-      case 75: CUEST_LAUNCH(2, 2, 1, 0); break;
-      case 76: CUEST_LAUNCH(2, 2, 1, 1); break;
-      case 77: CUEST_LAUNCH(2, 2, 1, 2); break;
-      case 78: CUEST_LAUNCH(2, 2, 2, 0); break;
-      case 79: CUEST_LAUNCH(2, 2, 2, 1); break;
-      case 80: CUEST_LAUNCH(2, 2, 2, 2); break;
-      default: break;
+      case 0:
+        CUEST_LAUNCH(0, 0, 0, 0);
+        break;
+      case 1:
+        CUEST_LAUNCH(0, 0, 0, 1);
+        break;
+      case 2:
+        CUEST_LAUNCH(0, 0, 0, 2);
+        break;
+      case 3:
+        CUEST_LAUNCH(0, 0, 1, 0);
+        break;
+      case 4:
+        CUEST_LAUNCH(0, 0, 1, 1);
+        break;
+      case 5:
+        CUEST_LAUNCH(0, 0, 1, 2);
+        break;
+      case 6:
+        CUEST_LAUNCH(0, 0, 2, 0);
+        break;
+      case 7:
+        CUEST_LAUNCH(0, 0, 2, 1);
+        break;
+      case 8:
+        CUEST_LAUNCH(0, 0, 2, 2);
+        break;
+      case 9:
+        CUEST_LAUNCH(0, 1, 0, 0);
+        break;
+      case 10:
+        CUEST_LAUNCH(0, 1, 0, 1);
+        break;
+      case 11:
+        CUEST_LAUNCH(0, 1, 0, 2);
+        break;
+      case 12:
+        CUEST_LAUNCH(0, 1, 1, 0);
+        break;
+      case 13:
+        CUEST_LAUNCH(0, 1, 1, 1);
+        break;
+      case 14:
+        CUEST_LAUNCH(0, 1, 1, 2);
+        break;
+      case 15:
+        CUEST_LAUNCH(0, 1, 2, 0);
+        break;
+      case 16:
+        CUEST_LAUNCH(0, 1, 2, 1);
+        break;
+      case 17:
+        CUEST_LAUNCH(0, 1, 2, 2);
+        break;
+      case 18:
+        CUEST_LAUNCH(0, 2, 0, 0);
+        break;
+      case 19:
+        CUEST_LAUNCH(0, 2, 0, 1);
+        break;
+      case 20:
+        CUEST_LAUNCH(0, 2, 0, 2);
+        break;
+      case 21:
+        CUEST_LAUNCH(0, 2, 1, 0);
+        break;
+      case 22:
+        CUEST_LAUNCH(0, 2, 1, 1);
+        break;
+      case 23:
+        CUEST_LAUNCH(0, 2, 1, 2);
+        break;
+      case 24:
+        CUEST_LAUNCH(0, 2, 2, 0);
+        break;
+      case 25:
+        CUEST_LAUNCH(0, 2, 2, 1);
+        break;
+      case 26:
+        CUEST_LAUNCH(0, 2, 2, 2);
+        break;
+      case 27:
+        CUEST_LAUNCH(1, 0, 0, 0);
+        break;
+      case 28:
+        CUEST_LAUNCH(1, 0, 0, 1);
+        break;
+      case 29:
+        CUEST_LAUNCH(1, 0, 0, 2);
+        break;
+      case 30:
+        CUEST_LAUNCH(1, 0, 1, 0);
+        break;
+      case 31:
+        CUEST_LAUNCH(1, 0, 1, 1);
+        break;
+      case 32:
+        CUEST_LAUNCH(1, 0, 1, 2);
+        break;
+      case 33:
+        CUEST_LAUNCH(1, 0, 2, 0);
+        break;
+      case 34:
+        CUEST_LAUNCH(1, 0, 2, 1);
+        break;
+      case 35:
+        CUEST_LAUNCH(1, 0, 2, 2);
+        break;
+      case 36:
+        CUEST_LAUNCH(1, 1, 0, 0);
+        break;
+      case 37:
+        CUEST_LAUNCH(1, 1, 0, 1);
+        break;
+      case 38:
+        CUEST_LAUNCH(1, 1, 0, 2);
+        break;
+      case 39:
+        CUEST_LAUNCH(1, 1, 1, 0);
+        break;
+      case 40:
+        CUEST_LAUNCH(1, 1, 1, 1);
+        break;
+      case 41:
+        CUEST_LAUNCH(1, 1, 1, 2);
+        break;
+      case 42:
+        CUEST_LAUNCH(1, 1, 2, 0);
+        break;
+      case 43:
+        CUEST_LAUNCH(1, 1, 2, 1);
+        break;
+      case 44:
+        CUEST_LAUNCH(1, 1, 2, 2);
+        break;
+      case 45:
+        CUEST_LAUNCH(1, 2, 0, 0);
+        break;
+      case 46:
+        CUEST_LAUNCH(1, 2, 0, 1);
+        break;
+      case 47:
+        CUEST_LAUNCH(1, 2, 0, 2);
+        break;
+      case 48:
+        CUEST_LAUNCH(1, 2, 1, 0);
+        break;
+      case 49:
+        CUEST_LAUNCH(1, 2, 1, 1);
+        break;
+      case 50:
+        CUEST_LAUNCH(1, 2, 1, 2);
+        break;
+      case 51:
+        CUEST_LAUNCH(1, 2, 2, 0);
+        break;
+      case 52:
+        CUEST_LAUNCH(1, 2, 2, 1);
+        break;
+      case 53:
+        CUEST_LAUNCH(1, 2, 2, 2);
+        break;
+      case 54:
+        CUEST_LAUNCH(2, 0, 0, 0);
+        break;
+      case 55:
+        CUEST_LAUNCH(2, 0, 0, 1);
+        break;
+      case 56:
+        CUEST_LAUNCH(2, 0, 0, 2);
+        break;
+      case 57:
+        CUEST_LAUNCH(2, 0, 1, 0);
+        break;
+      case 58:
+        CUEST_LAUNCH(2, 0, 1, 1);
+        break;
+      case 59:
+        CUEST_LAUNCH(2, 0, 1, 2);
+        break;
+      case 60:
+        CUEST_LAUNCH(2, 0, 2, 0);
+        break;
+      case 61:
+        CUEST_LAUNCH(2, 0, 2, 1);
+        break;
+      case 62:
+        CUEST_LAUNCH(2, 0, 2, 2);
+        break;
+      case 63:
+        CUEST_LAUNCH(2, 1, 0, 0);
+        break;
+      case 64:
+        CUEST_LAUNCH(2, 1, 0, 1);
+        break;
+      case 65:
+        CUEST_LAUNCH(2, 1, 0, 2);
+        break;
+      case 66:
+        CUEST_LAUNCH(2, 1, 1, 0);
+        break;
+      case 67:
+        CUEST_LAUNCH(2, 1, 1, 1);
+        break;
+      case 68:
+        CUEST_LAUNCH(2, 1, 1, 2);
+        break;
+      case 69:
+        CUEST_LAUNCH(2, 1, 2, 0);
+        break;
+      case 70:
+        CUEST_LAUNCH(2, 1, 2, 1);
+        break;
+      case 71:
+        CUEST_LAUNCH(2, 1, 2, 2);
+        break;
+      case 72:
+        CUEST_LAUNCH(2, 2, 0, 0);
+        break;
+      case 73:
+        CUEST_LAUNCH(2, 2, 0, 1);
+        break;
+      case 74:
+        CUEST_LAUNCH(2, 2, 0, 2);
+        break;
+      case 75:
+        CUEST_LAUNCH(2, 2, 1, 0);
+        break;
+      case 76:
+        CUEST_LAUNCH(2, 2, 1, 1);
+        break;
+      case 77:
+        CUEST_LAUNCH(2, 2, 1, 2);
+        break;
+      case 78:
+        CUEST_LAUNCH(2, 2, 2, 0);
+        break;
+      case 79:
+        CUEST_LAUNCH(2, 2, 2, 1);
+        break;
+      case 80:
+        CUEST_LAUNCH(2, 2, 2, 2);
+        break;
+      default:
+        break;
     }
 #undef CUEST_LAUNCH
     cudaFree(dqb);
   }
   cudaFree(dq);
-  if (screened_out) *screened_out = 0;
+  if (screened_out)
+    *screened_out = 0;
   return static_cast<int>(cudaGetLastError());
 }
 

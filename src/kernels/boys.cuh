@@ -64,7 +64,8 @@ constexpr int CUEST_BOYS_NMARGIN = 8;
  * @brief Boys function of order @p n for a single argument, double precision.
  */
 CUEST_HD inline double cuest_boys(int n, double Tval) {
-  if (Tval <= 0.0) return 1.0 / (2.0 * n + 1.0);
+  if (Tval <= 0.0)
+    return 1.0 / (2.0 * n + 1.0);
 
   if (Tval < CUEST_BOYS_SMALL_T) {
     double s = 1.0 / (2.0 * n + 1.0);
@@ -73,7 +74,8 @@ CUEST_HD inline double cuest_boys(int n, double Tval) {
       term *= -Tval / static_cast<double>(k);
       const double add = term / (2.0 * n + 2.0 * k + 1.0);
       s += add;
-      if (fabs(add) <= 1e-20 * fabs(s)) break;
+      if (fabs(add) <= 1e-20 * fabs(s))
+        break;
     }
     return s;
   }
@@ -90,12 +92,14 @@ CUEST_HD inline double cuest_boys(int n, double Tval) {
       }
       const double add = tk / prod;
       val += add;
-      if (k > 2 && add <= 1e-18 * val) break;
+      if (k > 2 && add <= 1e-18 * val)
+        break;
     }
     const double e = exp(-Tval);
     double f[CUEST_MAX_BOYS + CUEST_BOYS_NMARGIN + 2];
     f[N] = 0.5 * e * val;
-    for (int m = N - 1; m >= 0; --m) f[m] = (2.0 * Tval * f[m + 1] + e) / (2.0 * m + 1.0);
+    for (int m = N - 1; m >= 0; --m)
+      f[m] = (2.0 * Tval * f[m + 1] + e) / (2.0 * m + 1.0);
     return f[n];
   }
 
@@ -105,7 +109,8 @@ CUEST_HD inline double cuest_boys(int n, double Tval) {
     double f[CUEST_MAX_BOYS + 2];
     f[0] = 0.5 * sqrt(CUEST_BOYS_PI / Tval) * erf(sqrt(Tval));
     const int nmax = n;
-    for (int m = 0; m < nmax; ++m) f[m + 1] = ((2.0 * m + 1.0) * f[m] - e) / (2.0 * Tval);
+    for (int m = 0; m < nmax; ++m)
+      f[m + 1] = ((2.0 * m + 1.0) * f[m] - e) / (2.0 * Tval);
     return f[n];
   }
 }
@@ -117,14 +122,17 @@ CUEST_HD inline double cuest_boys(int n, double Tval) {
  * @param[in]  Tval  Argument T >= 0.
  * @param[out] out   Array of nmax+1 values.
  */
-CUEST_HD inline void cuest_boys_vec(int nmax, double Tval, double *out) {
-  if (nmax < 0) return;
+CUEST_HD inline void cuest_boys_vec(int nmax, double Tval, double* out) {
+  if (nmax < 0)
+    return;
   if (Tval <= 0.0) {
-    for (int n = 0; n <= nmax; ++n) out[n] = 1.0 / (2.0 * n + 1.0);
+    for (int n = 0; n <= nmax; ++n)
+      out[n] = 1.0 / (2.0 * n + 1.0);
     return;
   }
   if (Tval < CUEST_BOYS_SMALL_T) {
-    for (int n = 0; n <= nmax; ++n) out[n] = cuest_boys(n, Tval);
+    for (int n = 0; n <= nmax; ++n)
+      out[n] = cuest_boys(n, Tval);
     return;
   }
   if (Tval < CUEST_BOYS_MID_MAX) {
@@ -139,18 +147,22 @@ CUEST_HD inline void cuest_boys_vec(int nmax, double Tval, double *out) {
       }
       const double add = tk / prod;
       val += add;
-      if (k > 2 && add <= 1e-18 * val) break;
+      if (k > 2 && add <= 1e-18 * val)
+        break;
     }
     const double e = exp(-Tval);
     double f[CUEST_MAX_BOYS + CUEST_BOYS_NMARGIN + 2];
     f[N] = 0.5 * e * val;
-    for (int m = N - 1; m >= 0; --m) f[m] = (2.0 * Tval * f[m + 1] + e) / (2.0 * m + 1.0);
-    for (int n = 0; n <= nmax; ++n) out[n] = f[n];
+    for (int m = N - 1; m >= 0; --m)
+      f[m] = (2.0 * Tval * f[m + 1] + e) / (2.0 * m + 1.0);
+    for (int n = 0; n <= nmax; ++n)
+      out[n] = f[n];
     return;
   }
   const double e = exp(-Tval);
   out[0] = 0.5 * sqrt(CUEST_BOYS_PI / Tval) * erf(sqrt(Tval));
-  for (int m = 0; m < nmax; ++m) out[m + 1] = ((2.0 * m + 1.0) * out[m] - e) / (2.0 * Tval);
+  for (int m = 0; m < nmax; ++m)
+    out[m + 1] = ((2.0 * m + 1.0) * out[m] - e) / (2.0 * Tval);
 }
 
 #endif /* CUEST_BOYS_CUH */

@@ -13,17 +13,17 @@ namespace cuest {
 namespace {
 
 struct DeviceBuffers {
-  int *shell_L = nullptr;
-  int *shell_atom = nullptr;
-  int *shell_nprim = nullptr;
-  int *shell_nctr = nullptr;
-  int *shell_func_off = nullptr;
-  int *prim_off = nullptr;
-  int *coeff_off = nullptr;
-  double *exps = nullptr;
-  double *coeffs = nullptr;
-  double *centers = nullptr;
-  double *charges = nullptr;
+  int* shell_L = nullptr;
+  int* shell_atom = nullptr;
+  int* shell_nprim = nullptr;
+  int* shell_nctr = nullptr;
+  int* shell_func_off = nullptr;
+  int* prim_off = nullptr;
+  int* coeff_off = nullptr;
+  double* exps = nullptr;
+  double* coeffs = nullptr;
+  double* centers = nullptr;
+  double* charges = nullptr;
   size_t nexps = 0, ncoeff = 0;
 
   ~DeviceBuffers() { release(); }
@@ -47,21 +47,22 @@ struct DeviceBuffers {
 };
 
 template <typename T>
-bool upload(T *&dst, const std::vector<T> &src) {
+bool upload(T*& dst, const std::vector<T>& src) {
   if (src.empty()) {
     dst = nullptr;
     return true;
   }
-  if (cudaMalloc(&dst, sizeof(T) * src.size()) != cudaSuccess) return false;
+  if (cudaMalloc(&dst, sizeof(T) * src.size()) != cudaSuccess)
+    return false;
   return cudaMemcpy(dst, src.data(), sizeof(T) * src.size(), cudaMemcpyHostToDevice) == cudaSuccess;
 }
 
-bool build_device_basis(const BasisData &basis, DeviceBuffers &buf, DeviceBasis &db) {
+bool build_device_basis(const BasisData& basis, DeviceBuffers& buf, DeviceBasis& db) {
   std::vector<int> shell_L, shell_atom, shell_nprim, shell_nctr, shell_func_off, prim_off,
       coeff_off;
   std::vector<double> exps, coeffs;
   int eoff = 0, coff = 0;
-  for (const PrimShell &s : basis.shells) {
+  for (const PrimShell& s : basis.shells) {
     shell_L.push_back(s.L);
     shell_atom.push_back(s.atom);
     shell_nprim.push_back(s.nprim);
@@ -69,8 +70,10 @@ bool build_device_basis(const BasisData &basis, DeviceBuffers &buf, DeviceBasis 
     shell_func_off.push_back(s.func_offset);
     prim_off.push_back(eoff);
     coeff_off.push_back(coff);
-    for (double e : s.exps) exps.push_back(e);
-    for (double c : s.cn) coeffs.push_back(c);
+    for (double e : s.exps)
+      exps.push_back(e);
+    for (double c : s.cn)
+      coeffs.push_back(c);
     eoff += s.nprim;
     coff += static_cast<int>(s.cn.size());
   }
@@ -81,9 +84,8 @@ bool build_device_basis(const BasisData &basis, DeviceBuffers &buf, DeviceBasis 
   if (!upload(buf.shell_L, shell_L) || !upload(buf.shell_atom, shell_atom) ||
       !upload(buf.shell_nprim, shell_nprim) || !upload(buf.shell_nctr, shell_nctr) ||
       !upload(buf.shell_func_off, shell_func_off) || !upload(buf.prim_off, prim_off) ||
-      !upload(buf.coeff_off, coeff_off) || !upload(buf.exps, exps) ||
-      !upload(buf.coeffs, coeffs) || !upload(buf.centers, basis.atom_xyz) ||
-      !upload(buf.charges, basis.atom_Z))
+      !upload(buf.coeff_off, coeff_off) || !upload(buf.exps, exps) || !upload(buf.coeffs, coeffs) ||
+      !upload(buf.centers, basis.atom_xyz) || !upload(buf.charges, basis.atom_Z))
     return false;
   db.shell_L = buf.shell_L;
   db.shell_atom = buf.shell_atom;
@@ -101,23 +103,25 @@ bool build_device_basis(const BasisData &basis, DeviceBuffers &buf, DeviceBasis 
 
 }  // namespace
 
-cuestStatus_t cuda_one_electron(const BasisData &basis, int which, cuestPrecision_t precision,
-                                double *out, int ld) {
+cuestStatus_t cuda_one_electron(const BasisData& basis, int which, cuestPrecision_t precision,
+                                double* out, int ld) {
   DeviceBuffers buf;
   DeviceBasis db;
-  if (!build_device_basis(basis, buf, db)) return CUEST_OUT_OF_MEMORY;
+  if (!build_device_basis(basis, buf, db))
+    return CUEST_OUT_OF_MEMORY;
   const size_t n = static_cast<size_t>(basis.nbf) * ld;
-  double *d_out = nullptr;
-  if (cudaMalloc(&d_out, sizeof(double) * n) != cudaSuccess) return CUEST_OUT_OF_MEMORY;
+  double* d_out = nullptr;
+  if (cudaMalloc(&d_out, sizeof(double) * n) != cudaSuccess)
+    return CUEST_OUT_OF_MEMORY;
   cudaMemset(d_out, 0, sizeof(double) * n);
-  const int rc = cuest_cuda_launch_one_electron(db, which, precision == CUEST_FP32, d_out, ld,
-                                                basis.nbf);
+  const int rc =
+      cuest_cuda_launch_one_electron(db, which, precision == CUEST_FP32, d_out, ld, basis.nbf);
   if (rc != 0) {
     cudaFree(d_out);
     return CUEST_INTERNAL_ERROR;
   }
-  if (cudaMemcpy2D(out, sizeof(double) * ld, d_out, sizeof(double) * ld,
-                   sizeof(double) * basis.nbf, basis.nbf, cudaMemcpyDeviceToHost) != cudaSuccess) {
+  if (cudaMemcpy2D(out, sizeof(double) * ld, d_out, sizeof(double) * ld, sizeof(double) * basis.nbf,
+                   basis.nbf, cudaMemcpyDeviceToHost) != cudaSuccess) {
     cudaFree(d_out);
     return CUEST_INTERNAL_ERROR;
   }
@@ -125,13 +129,15 @@ cuestStatus_t cuda_one_electron(const BasisData &basis, int which, cuestPrecisio
   return CUEST_SUCCESS;
 }
 
-cuestStatus_t cuda_schwarz(const BasisData &basis, double *q_pair) {
+cuestStatus_t cuda_schwarz(const BasisData& basis, double* q_pair) {
   DeviceBuffers buf;
   DeviceBasis db;
-  if (!build_device_basis(basis, buf, db)) return CUEST_OUT_OF_MEMORY;
+  if (!build_device_basis(basis, buf, db))
+    return CUEST_OUT_OF_MEMORY;
   const size_t n = static_cast<size_t>(basis.nshells) * basis.nshells;
-  double *d_q = nullptr;
-  if (cudaMalloc(&d_q, sizeof(double) * n) != cudaSuccess) return CUEST_OUT_OF_MEMORY;
+  double* d_q = nullptr;
+  if (cudaMalloc(&d_q, sizeof(double) * n) != cudaSuccess)
+    return CUEST_OUT_OF_MEMORY;
   cudaMemset(d_q, 0, sizeof(double) * n);
   const int rc = cuest_cuda_launch_schwarz(db, d_q);
   if (rc != 0) {
@@ -143,12 +149,13 @@ cuestStatus_t cuda_schwarz(const BasisData &basis, double *q_pair) {
   return CUEST_SUCCESS;
 }
 
-cuestStatus_t cuda_eri_tensor(const BasisData &basis, cuestPrecision_t precision,
-                              cuestEriAlgo_t algo, double screen_tol, double *eri,
-                              cuestEriStats_t *stats) {
+cuestStatus_t cuda_eri_tensor(const BasisData& basis, cuestPrecision_t precision,
+                              cuestEriAlgo_t algo, double screen_tol, double* eri,
+                              cuestEriStats_t* stats) {
   DeviceBuffers buf;
   DeviceBasis db;
-  if (!build_device_basis(basis, buf, db)) return CUEST_OUT_OF_MEMORY;
+  if (!build_device_basis(basis, buf, db))
+    return CUEST_OUT_OF_MEMORY;
 
   std::vector<ShellPair> pairs;
   build_shell_pairs(basis, pairs, algo);
@@ -166,17 +173,18 @@ cuestStatus_t cuda_eri_tensor(const BasisData &basis, cuestPrecision_t precision
   }
 
   const size_t n = static_cast<size_t>(basis.nbf);
-  double *d_eri = nullptr;
-  if (cudaMalloc(&d_eri, sizeof(double) * n * n * n * n) != cudaSuccess) return CUEST_OUT_OF_MEMORY;
+  double* d_eri = nullptr;
+  if (cudaMalloc(&d_eri, sizeof(double) * n * n * n * n) != cudaSuccess)
+    return CUEST_OUT_OF_MEMORY;
   cudaMemset(d_eri, 0, sizeof(double) * n * n * n * n);
   cudaEvent_t start, stop;
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
   cudaEventRecord(start);
   size_t ignored = 0;
-  const int rc = cuest_cuda_launch_eri(db, quartets.data(), static_cast<int>(quartets.size()),
-                                       precision == CUEST_FP32, static_cast<int>(algo), d_eri,
-                                       &ignored);
+  const int rc =
+      cuest_cuda_launch_eri(db, quartets.data(), static_cast<int>(quartets.size()),
+                            precision == CUEST_FP32, static_cast<int>(algo), d_eri, &ignored);
   cudaEventRecord(stop);
   cudaEventSynchronize(stop);
   float ms = 0.0f;
@@ -197,9 +205,9 @@ cuestStatus_t cuda_eri_tensor(const BasisData &basis, cuestPrecision_t precision
   return CUEST_SUCCESS;
 }
 
-cuestStatus_t cuda_eri_batch(const BasisData &basis, const cuestQuartet_t *quartets, int nquartets,
-                             cuestPrecision_t precision, cuestEriAlgo_t algo, double *out,
-                             const size_t *offsets) {
+cuestStatus_t cuda_eri_batch(const BasisData& basis, const cuestQuartet_t* quartets, int nquartets,
+                             cuestPrecision_t precision, cuestEriAlgo_t algo, double* out,
+                             const size_t* offsets) {
   (void)basis;
   (void)quartets;
   (void)nquartets;

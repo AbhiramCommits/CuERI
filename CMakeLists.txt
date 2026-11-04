@@ -146,17 +146,18 @@ install(TARGETS cuest_eri EXPORT cuERITargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(DIRECTORY include/cuest DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY data/basis DESTINATION ${CMAKE_INSTALL_DATADIR}/cuest)
+install(DIRECTORY data/basis DESTINATION ${CMAKE_INSTALL_DATADIR}/cuest
+        PATTERN "unsupported_l.json" EXCLUDE)
 install(EXPORT cuERITargets NAMESPACE cuERI:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cuERI)
 configure_package_config_file(cmake/cuERI.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cuERIConfig.cmake
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cuERI)
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/cuERIVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/cuERIConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cuERIConfig.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/cuERIVersion.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/cuERIConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cuERI)
 
 message(STATUS "cuERI: build type ${CMAKE_BUILD_TYPE}, CUDA ${CUEST_CUDA_AVAILABLE}, OpenMP ${CUEST_OPENMP_FOUND}")

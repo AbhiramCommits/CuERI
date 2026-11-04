@@ -20,7 +20,7 @@ namespace cuest_ref {
  *
  * @param which 0 = overlap, 1 = kinetic, 2 = nuclear attraction.
  */
-void compute_one_electron(const cuest::BasisData &basis, int which, double *out, int ld);
+void compute_one_electron(const cuest::BasisData& basis, int which, double* out, int ld);
 
 /** @brief Boys function from the incomplete gamma function (long double). */
 long double boys_ref(int n, long double T);

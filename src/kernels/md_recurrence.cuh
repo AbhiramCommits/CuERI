@@ -46,7 +46,8 @@ CUEST_HD inline int cuest_rindex(int tx, int ty, int tz) {
 /** @brief Integer power, base^n for n >= 0. */
 CUEST_HD inline double cuest_pow_int(double base, int n) {
   double r = 1.0;
-  for (int k = 0; k < n; ++k) r *= base;
+  for (int k = 0; k < n; ++k)
+    r *= base;
   return r;
 }
 
@@ -64,24 +65,27 @@ CUEST_HD inline double cuest_pow_int(double base, int n) {
  * @param[out] tab       Flat table of size (imax+1)*(jmax+1)*CUEST_E1D_TMAX.
  */
 template <typename T>
-CUEST_HD void cuest_md_E1d_table(int imax, int jmax, T p, T PA, T PB, T K, T *tab) {
+CUEST_HD void cuest_md_E1d_table(int imax, int jmax, T p, T PA, T PB, T K, T* tab) {
   const int nj = jmax + 1;
   for (int ii = 0; ii <= imax; ++ii)
     for (int jj = 0; jj <= jmax; ++jj)
-      for (int t = 0; t < CUEST_E1D_TMAX; ++t) tab[(ii * nj + jj) * CUEST_E1D_TMAX + t] = T(0);
+      for (int t = 0; t < CUEST_E1D_TMAX; ++t)
+        tab[(ii * nj + jj) * CUEST_E1D_TMAX + t] = T(0);
 
   tab[0] = K;
   for (int ii = 0; ii <= imax; ++ii) {
     for (int jj = 0; jj <= jmax; ++jj) {
-      if (ii == 0 && jj == 0) continue;
-      const T *a = (ii > 0) ? &tab[((ii - 1) * nj + jj) * CUEST_E1D_TMAX]
+      if (ii == 0 && jj == 0)
+        continue;
+      const T* a = (ii > 0) ? &tab[((ii - 1) * nj + jj) * CUEST_E1D_TMAX]
                             : &tab[(ii * nj + (jj - 1)) * CUEST_E1D_TMAX];
       const T x = (ii > 0) ? PA : PB;
       const int tmax = ii + jj;
-      T *dst = &tab[(ii * nj + jj) * CUEST_E1D_TMAX];
+      T* dst = &tab[(ii * nj + jj) * CUEST_E1D_TMAX];
       for (int t = 0; t <= tmax; ++t) {
         T v = x * a[t];
-        if (t >= 1) v += a[t - 1] / (T(2) * p);
+        if (t >= 1)
+          v += a[t - 1] / (T(2) * p);
         v += T(t + 1) * a[t + 1];
         dst[t] = v;
       }
@@ -95,12 +99,13 @@ CUEST_HD void cuest_md_E1d_table(int imax, int jmax, T p, T PA, T PB, T K, T *ta
  * @param[out] E Array of at least i+j+1 entries.
  */
 template <typename T>
-CUEST_HD void cuest_md_E1d(int i, int j, T p, T PA, T PB, T K, T *E) {
+CUEST_HD void cuest_md_E1d(int i, int j, T p, T PA, T PB, T K, T* E) {
   T tab[4 * 4 * CUEST_E1D_TMAX];
   cuest_md_E1d_table(i, j, p, PA, PB, K, tab);
   const int nj = j + 1;
-  const T *src = &tab[(i * nj + j) * CUEST_E1D_TMAX];
-  for (int t = 0; t <= i + j; ++t) E[t] = src[t];
+  const T* src = &tab[(i * nj + j) * CUEST_E1D_TMAX];
+  for (int t = 0; t <= i + j; ++t)
+    E[t] = src[t];
 }
 
 /**
@@ -113,12 +118,12 @@ CUEST_HD void cuest_md_E1d(int i, int j, T p, T PA, T PB, T K, T *E) {
  * @param[out] R     Table of CUEST_RDIM^3 entries, indexed by cuest_rindex().
  */
 template <typename T>
-CUEST_HD void cuest_md_Rtable(int lmax, T alpha, const T D[3], T Tval, T *R) {
+CUEST_HD void cuest_md_Rtable(int lmax, T alpha, const T D[3], T Tval, T* R) {
   constexpr int N = CUEST_RDIM * CUEST_RDIM * CUEST_RDIM;
   T buf0[N];
   T buf1[N];
-  T *next = buf0;
-  T *cur = buf1;
+  T* next = buf0;
+  T* cur = buf1;
   double F[CUEST_MAX_BOYS + 2];
   cuest_boys_vec(lmax, static_cast<double>(Tval), F);
 
@@ -134,21 +139,24 @@ CUEST_HD void cuest_md_Rtable(int lmax, T alpha, const T D[3], T Tval, T *R) {
             cur[0] = seed;
           } else if (tx > 0) {
             T v = D[0] * next[cuest_rindex(tx - 1, ty, tz)];
-            if (tx >= 2) v += T(tx - 1) * next[cuest_rindex(tx - 2, ty, tz)];
+            if (tx >= 2)
+              v += T(tx - 1) * next[cuest_rindex(tx - 2, ty, tz)];
             cur[idx] = v;
           } else if (ty > 0) {
             T v = D[1] * next[cuest_rindex(tx, ty - 1, tz)];
-            if (ty >= 2) v += T(ty - 1) * next[cuest_rindex(tx, ty - 2, tz)];
+            if (ty >= 2)
+              v += T(ty - 1) * next[cuest_rindex(tx, ty - 2, tz)];
             cur[idx] = v;
           } else {
             T v = D[2] * next[cuest_rindex(tx, ty, tz - 1)];
-            if (tz >= 2) v += T(tz - 1) * next[cuest_rindex(tx, ty, tz - 2)];
+            if (tz >= 2)
+              v += T(tz - 1) * next[cuest_rindex(tx, ty, tz - 2)];
             cur[idx] = v;
           }
         }
       }
     }
-    T *tmp = next;
+    T* tmp = next;
     next = cur;
     cur = tmp;
   }
@@ -168,8 +176,8 @@ CUEST_HD void cuest_md_Rtable(int lmax, T alpha, const T D[3], T Tval, T *R) {
  * @param[in] K     Product exponential exp(-ab/p |A-B|^2).
  */
 template <typename T>
-CUEST_HD T cuest_prim_overlap(const int la[3], const int lb[3], T p, const T PA[3],
-                              const T PB[3], T K) {
+CUEST_HD T cuest_prim_overlap(const int la[3], const int lb[3], T p, const T PA[3], const T PB[3],
+                              T K) {
   T Ex[CUEST_E1D_TMAX], Ey[CUEST_E1D_TMAX], Ez[CUEST_E1D_TMAX];
   cuest_md_E1d(la[0], lb[0], p, PA[0], PB[0], T(1), Ex);
   cuest_md_E1d(la[1], lb[1], p, PA[1], PB[1], T(1), Ey);
@@ -212,7 +220,8 @@ CUEST_HD T cuest_prim_kinetic(const int la[3], const int lb[3], T a, T b, T p, c
     const int pj[4] = {j0 - 1, j0 + 1, j0 - 1, j0 + 1};
     const T coef[4] = {T(i0 * j0), T(-2) * b * T(i0), T(-2) * a * T(j0), T(4) * a * b};
     for (int m = 0; m < 4; ++m) {
-      if (pi[m] < 0 || pj[m] < 0) continue;
+      if (pi[m] < 0 || pj[m] < 0)
+        continue;
       T val = T(1);
       for (int dd = 0; dd < 3; ++dd) {
         const int ii = (dd == d) ? pi[m] : la[dd];
@@ -232,8 +241,8 @@ CUEST_HD T cuest_prim_kinetic(const int la[3], const int lb[3], T a, T b, T p, c
  * @param[in] Z   Nuclear charge.
  */
 template <typename T>
-CUEST_HD T cuest_prim_nuclear(const int la[3], const int lb[3], T p, const T PA[3],
-                              const T PB[3], T K, const T PC[3], T Z) {
+CUEST_HD T cuest_prim_nuclear(const int la[3], const int lb[3], T p, const T PA[3], const T PB[3],
+                              T K, const T PC[3], T Z) {
   T Ex[CUEST_E1D_TMAX], Ey[CUEST_E1D_TMAX], Ez[CUEST_E1D_TMAX];
   cuest_md_E1d(la[0], lb[0], p, PA[0], PB[0], T(1), Ex);
   cuest_md_E1d(la[1], lb[1], p, PA[1], PB[1], T(1), Ey);

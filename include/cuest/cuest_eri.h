@@ -35,21 +35,21 @@ extern "C" {
 #define CUEST_VERSION_PATCH 0
 
 /** @brief Opaque library handle. */
-typedef struct cuest_handle_t *cuestHandle_t;
+typedef struct cuest_handle_t* cuestHandle_t;
 
 /** @brief Opaque basis-set handle. */
-typedef struct cuest_basis_t *cuestBasis_t;
+typedef struct cuest_basis_t* cuestBasis_t;
 
 /**
  * @brief Status codes returned by every cuERI entry point.
  */
 typedef enum cuestStatus_t_ {
-  CUEST_SUCCESS = 0,        /**< Operation completed successfully. */
-  CUEST_INVALID_VALUE = 1,  /**< A caller-supplied argument is invalid. */
-  CUEST_NOT_SUPPORTED = 2,  /**< The requested feature/backend is unavailable. */
-  CUEST_OUT_OF_MEMORY = 3,  /**< An allocation failed. */
-  CUEST_NUMERICAL_ERROR = 4,/**< A numerical failure (NaN/Inf) was detected. */
-  CUEST_INTERNAL_ERROR = 5  /**< An unexpected internal failure. */
+  CUEST_SUCCESS = 0,         /**< Operation completed successfully. */
+  CUEST_INVALID_VALUE = 1,   /**< A caller-supplied argument is invalid. */
+  CUEST_NOT_SUPPORTED = 2,   /**< The requested feature/backend is unavailable. */
+  CUEST_OUT_OF_MEMORY = 3,   /**< An allocation failed. */
+  CUEST_NUMERICAL_ERROR = 4, /**< A numerical failure (NaN/Inf) was detected. */
+  CUEST_INTERNAL_ERROR = 5   /**< An unexpected internal failure. */
 } cuestStatus_t;
 
 /**
@@ -75,8 +75,8 @@ typedef enum cuestBackend_t_ {
  * @brief Algorithm used for two-electron repulsion integrals.
  */
 typedef enum cuestEriAlgo_t_ {
-  CUEST_ERI_ALGO_MD = 0,  /**< McMurchie-Davidson Hermite recurrences. */
-  CUEST_ERI_ALGO_RYS = 1  /**< Rys quadrature. */
+  CUEST_ERI_ALGO_MD = 0, /**< McMurchie-Davidson Hermite recurrences. */
+  CUEST_ERI_ALGO_RYS = 1 /**< Rys quadrature. */
 } cuestEriAlgo_t;
 
 /**
@@ -113,7 +113,7 @@ typedef struct cuestEriStats_t_ {
  * @param[out] handle Receives the new handle.  Must not be NULL.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE / #CUEST_OUT_OF_MEMORY.
  */
-CUEST_API cuestStatus_t cuestCreate(cuestHandle_t *handle);
+CUEST_API cuestStatus_t cuestCreate(cuestHandle_t* handle);
 
 /**
  * @brief Destroy a handle created by cuestCreate().
@@ -132,7 +132,7 @@ CUEST_API cuestStatus_t cuestDestroy(cuestHandle_t handle);
  * @param[out] backend Receives the backend identifier.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE.
  */
-CUEST_API cuestStatus_t cuestGetBackend(cuestHandle_t handle, cuestBackend_t *backend);
+CUEST_API cuestStatus_t cuestGetBackend(cuestHandle_t handle, cuestBackend_t* backend);
 
 /**
  * @brief Select the two-electron integral algorithm.
@@ -151,7 +151,7 @@ CUEST_API cuestStatus_t cuestSetEriAlgo(cuestHandle_t handle, cuestEriAlgo_t alg
  * @param[out] patch Receives the patch version (may be NULL).
  * @return #CUEST_SUCCESS.
  */
-CUEST_API cuestStatus_t cuestGetVersion(int *major, int *minor, int *patch);
+CUEST_API cuestStatus_t cuestGetVersion(int* major, int* minor, int* patch);
 
 /**
  * @brief Map a status code to a human-readable, static string.
@@ -160,7 +160,7 @@ CUEST_API cuestStatus_t cuestGetVersion(int *major, int *minor, int *patch);
  * @param[out] msg    Receives a pointer to a static string owned by the library.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE.
  */
-CUEST_API cuestStatus_t cuestGetErrorString(cuestStatus_t status, const char **msg);
+CUEST_API cuestStatus_t cuestGetErrorString(cuestStatus_t status, const char** msg);
 
 /**
  * @brief Build a basis set from a molecule JSON file and a named basis.
@@ -176,8 +176,8 @@ CUEST_API cuestStatus_t cuestGetErrorString(cuestStatus_t status, const char **m
  * @return #CUEST_SUCCESS, #CUEST_INVALID_VALUE, #CUEST_NOT_SUPPORTED,
  *         #CUEST_OUT_OF_MEMORY or #CUEST_INTERNAL_ERROR.
  */
-CUEST_API cuestStatus_t cuestBasisCreateFromFile(cuestHandle_t handle, const char *molecule_json,
-                                                 const char *basis_name, cuestBasis_t *basis);
+CUEST_API cuestStatus_t cuestBasisCreateFromFile(cuestHandle_t handle, const char* molecule_json,
+                                                 const char* basis_name, cuestBasis_t* basis);
 
 /**
  * @brief Destroy a basis set.
@@ -196,7 +196,7 @@ CUEST_API cuestStatus_t cuestBasisDestroy(cuestBasis_t basis);
  * @param[out] nbf   Receives the function count.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE.
  */
-CUEST_API cuestStatus_t cuestBasisNumFunctions(cuestBasis_t basis, int *nbf);
+CUEST_API cuestStatus_t cuestBasisNumFunctions(cuestBasis_t basis, int* nbf);
 
 /**
  * @brief Number of shells in a basis set.
@@ -205,7 +205,7 @@ CUEST_API cuestStatus_t cuestBasisNumFunctions(cuestBasis_t basis, int *nbf);
  * @param[out] nshells  Receives the shell count.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE.
  */
-CUEST_API cuestStatus_t cuestBasisNumShells(cuestBasis_t basis, int *nshells);
+CUEST_API cuestStatus_t cuestBasisNumShells(cuestBasis_t basis, int* nshells);
 
 /**
  * @brief Query one shell's metadata.
@@ -223,8 +223,8 @@ CUEST_API cuestStatus_t cuestBasisNumShells(cuestBasis_t basis, int *nshells);
  * @param[out] func_offset Receives the first basis-function index.
  * @return #CUEST_SUCCESS or #CUEST_INVALID_VALUE.
  */
-CUEST_API cuestStatus_t cuestBasisShellInfo(cuestBasis_t basis, int ishell, int *atom, int *am,
-                                            int *nprim, int *nctr, int *func_offset);
+CUEST_API cuestStatus_t cuestBasisShellInfo(cuestBasis_t basis, int ishell, int* atom, int* am,
+                                            int* nprim, int* nctr, int* func_offset);
 
 /**
  * @brief Compute the overlap matrix \f$S_{\mu\nu}=\langle\mu|\nu\rangle\f$.
@@ -238,7 +238,7 @@ CUEST_API cuestStatus_t cuestBasisShellInfo(cuestBasis_t basis, int ishell, int 
  * @return #CUEST_SUCCESS or an error status.
  */
 CUEST_API cuestStatus_t cuestOverlapMatrix(cuestHandle_t handle, cuestBasis_t basis,
-                                           cuestPrecision_t precision, double *out, int ld);
+                                           cuestPrecision_t precision, double* out, int ld);
 
 /**
  * @brief Compute the kinetic-energy matrix \f$T_{\mu\nu}\f$.
@@ -251,7 +251,7 @@ CUEST_API cuestStatus_t cuestOverlapMatrix(cuestHandle_t handle, cuestBasis_t ba
  * @return #CUEST_SUCCESS or an error status.
  */
 CUEST_API cuestStatus_t cuestKineticMatrix(cuestHandle_t handle, cuestBasis_t basis,
-                                           cuestPrecision_t precision, double *out, int ld);
+                                           cuestPrecision_t precision, double* out, int ld);
 
 /**
  * @brief Compute the nuclear-attraction matrix \f$V_{\mu\nu}\f$.
@@ -264,7 +264,7 @@ CUEST_API cuestStatus_t cuestKineticMatrix(cuestHandle_t handle, cuestBasis_t ba
  * @return #CUEST_SUCCESS or an error status.
  */
 CUEST_API cuestStatus_t cuestNuclearMatrix(cuestHandle_t handle, cuestBasis_t basis,
-                                           cuestPrecision_t precision, double *out, int ld);
+                                           cuestPrecision_t precision, double* out, int ld);
 
 /**
  * @brief Compute Schwarz shell-pair bounds.
@@ -279,7 +279,8 @@ CUEST_API cuestStatus_t cuestNuclearMatrix(cuestHandle_t handle, cuestBasis_t ba
  * @param[out] q_pair Array of nshell*nshell doubles.
  * @return #CUEST_SUCCESS or an error status.
  */
-CUEST_API cuestStatus_t cuestSchwarzBounds(cuestHandle_t handle, cuestBasis_t basis, double *q_pair);
+CUEST_API cuestStatus_t cuestSchwarzBounds(cuestHandle_t handle, cuestBasis_t basis,
+                                           double* q_pair);
 
 /**
  * @brief Compute a caller-selected batch of shell quartets.
@@ -300,8 +301,9 @@ CUEST_API cuestStatus_t cuestSchwarzBounds(cuestHandle_t handle, cuestBasis_t ba
  * @return #CUEST_SUCCESS or an error status.
  */
 CUEST_API cuestStatus_t cuestERIBatch(cuestHandle_t handle, cuestBasis_t basis,
-                                      const cuestQuartet_t *quartets, int nquartets,
-                                      cuestPrecision_t precision, double *out, const size_t *offsets);
+                                      const cuestQuartet_t* quartets, int nquartets,
+                                      cuestPrecision_t precision, double* out,
+                                      const size_t* offsets);
 
 /**
  * @brief Compute the full two-electron tensor.
@@ -321,7 +323,7 @@ CUEST_API cuestStatus_t cuestERIBatch(cuestHandle_t handle, cuestBasis_t basis,
  */
 CUEST_API cuestStatus_t cuestERITensor(cuestHandle_t handle, cuestBasis_t basis,
                                        cuestPrecision_t precision, double screen_tol,
-                                       double *eri_nbf4, cuestEriStats_t *stats);
+                                       double* eri_nbf4, cuestEriStats_t* stats);
 
 #ifdef __cplusplus
 } /* extern "C" */

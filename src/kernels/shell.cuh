@@ -40,28 +40,34 @@
 constexpr double CUEST_PI = 3.14159265358979323846264338327950288;
 
 /** @brief Number of Cartesian components of angular momentum @p l. */
-CUEST_HD inline int cuest_num_cart(int l) { return (l + 1) * (l + 2) / 2; }
+CUEST_HD inline int cuest_num_cart(int l) {
+  return (l + 1) * (l + 2) / 2;
+}
 
 /**
  * @brief Double factorial n!! with (-1)!! = 0!! = 1.
  */
 CUEST_HD inline double cuest_double_factorial(int n) {
   double r = 1.0;
-  for (int k = n; k > 0; k -= 2) r *= static_cast<double>(k);
+  for (int k = n; k > 0; k -= 2)
+    r *= static_cast<double>(k);
   return r;
 }
 
 /**
  * @brief Map a flat component index to (lx,ly,lz) for angular momentum @p l.
  */
-CUEST_HD inline void cuest_cart_component(int l, int idx, int *lx, int *ly, int *lz) {
+CUEST_HD inline void cuest_cart_component(int l, int idx, int* lx, int* ly, int* lz) {
   int k = 0;
   for (int ix = l; ix >= 0; --ix) {
     for (int iy = l - ix; iy >= 0; --iy) {
       if (k == idx) {
-        if (lx) *lx = ix;
-        if (ly) *ly = iy;
-        if (lz) *lz = l - ix - iy;
+        if (lx)
+          *lx = ix;
+        if (ly)
+          *ly = iy;
+        if (lz)
+          *lz = l - ix - iy;
         return;
       }
       ++k;
@@ -79,9 +85,9 @@ CUEST_HD inline void cuest_cart_component(int l, int idx, int *lx, int *ly, int 
  */
 CUEST_HD inline double cuest_prim_norm(int l, double alpha) {
   double four_a_pow = 1.0; /* (4 alpha)^l, l <= 2 */
-  for (int k = 0; k < l; ++k) four_a_pow *= 4.0 * alpha;
-  return pow(2.0 * alpha / CUEST_PI, 0.75) *
-         sqrt(four_a_pow / cuest_double_factorial(2 * l - 1));
+  for (int k = 0; k < l; ++k)
+    four_a_pow *= 4.0 * alpha;
+  return pow(2.0 * alpha / CUEST_PI, 0.75) * sqrt(four_a_pow / cuest_double_factorial(2 * l - 1));
 }
 
 /**
@@ -90,9 +96,11 @@ CUEST_HD inline double cuest_prim_norm(int l, double alpha) {
  * Returns zero for odd @p n.
  */
 CUEST_HD inline double cuest_gauss_moment_1d(int n, double p) {
-  if (n & 1) return 0.0;
+  if (n & 1)
+    return 0.0;
   double half_pow = 1.0; /* (2p)^(n/2) without std::pow for device safety */
-  for (int k = 0; k < n / 2; ++k) half_pow *= 2.0 * p;
+  for (int k = 0; k < n / 2; ++k)
+    half_pow *= 2.0 * p;
   return cuest_double_factorial(n - 1) / half_pow * sqrt(CUEST_PI / p);
 }
 

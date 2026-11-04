@@ -17,17 +17,17 @@ namespace cuest {
 
 /** @brief One contracted Cartesian shell. */
 struct PrimShell {
-  int atom = 0;         /**< Zero-based atom index. */
-  int L = 0;            /**< Angular momentum (0, 1, 2). */
-  int nprim = 0;        /**< Number of primitive Gaussians. */
-  int nctr = 0;         /**< Number of contraction columns. */
-  int func_offset = 0;  /**< Index of the first basis function. */
+  int atom = 0;             /**< Zero-based atom index. */
+  int L = 0;                /**< Angular momentum (0, 1, 2). */
+  int nprim = 0;            /**< Number of primitive Gaussians. */
+  int nctr = 0;             /**< Number of contraction columns. */
+  int func_offset = 0;      /**< Index of the first basis function. */
   std::vector<double> exps; /**< nprim exponents. */
   /** Normalised coefficients, layout [ictr][icomp][iprim]. */
   std::vector<double> cn;
 
   int ncomp() const { return (L + 1) * (L + 2) / 2; }
-  const double *coeff(int ictr, int icomp) const {
+  const double* coeff(int ictr, int icomp) const {
     return &cn[(static_cast<size_t>(ictr) * ncomp() + icomp) * static_cast<size_t>(nprim)];
   }
 };
@@ -39,8 +39,8 @@ struct BasisData {
   int natoms = 0;
   int max_am = 0;
   std::vector<PrimShell> shells;
-  std::vector<double> atom_xyz;  /**< 3*natoms, bohr. */
-  std::vector<double> atom_Z;    /**< ncharges. */
+  std::vector<double> atom_xyz; /**< 3*natoms, bohr. */
+  std::vector<double> atom_Z;   /**< ncharges. */
 };
 
 /** @brief Result of parsing a molecule file. */
@@ -57,21 +57,21 @@ struct RawShell {
 };
 
 /** @brief Load a molecule JSON file. */
-bool load_molecule(const std::string &path, Molecule &mol, std::string &err);
+bool load_molecule(const std::string& path, Molecule& mol, std::string& err);
 
 /** @brief Load one element from a basis JSON file. */
-bool load_basis_element(const std::string &path, const std::string &element,
-                        std::vector<RawShell> &shells, std::string &err);
+bool load_basis_element(const std::string& path, const std::string& element,
+                        std::vector<RawShell>& shells, std::string& err);
 
 /** @brief Resolve the data directory (env CUEST_DATA_DIR, then compile default). */
 std::string data_directory();
 
 /** @brief Assemble a BasisData from a molecule and basis name. */
-bool build_basis(const Molecule &mol, const std::string &basis_name, BasisData &out,
-                 std::string &err);
+bool build_basis(const Molecule& mol, const std::string& basis_name, BasisData& out,
+                 std::string& err);
 
 /** @brief Element symbol for atomic number Z. */
-const char *element_symbol(int Z);
+const char* element_symbol(int Z);
 
 }  // namespace cuest
 
@@ -89,15 +89,15 @@ struct cuest_handle_t {
 namespace cuest {
 
 /* CPU backend entry points (implemented in one_electron.cpp / eri_cpu.cpp). */
-cuestStatus_t cpu_one_electron(const BasisData &basis, int which, cuestPrecision_t precision,
-                               double *out, int ld);
-cuestStatus_t cpu_schwarz(const BasisData &basis, double *q_pair);
-cuestStatus_t cpu_eri_batch(const BasisData &basis, const cuestQuartet_t *quartets, int nquartets,
-                            cuestPrecision_t precision, cuestEriAlgo_t algo, double *out,
-                            const size_t *offsets);
-cuestStatus_t cpu_eri_tensor(const BasisData &basis, cuestPrecision_t precision,
-                             cuestEriAlgo_t algo, double screen_tol, double *eri,
-                             cuestEriStats_t *stats);
+cuestStatus_t cpu_one_electron(const BasisData& basis, int which, cuestPrecision_t precision,
+                               double* out, int ld);
+cuestStatus_t cpu_schwarz(const BasisData& basis, double* q_pair);
+cuestStatus_t cpu_eri_batch(const BasisData& basis, const cuestQuartet_t* quartets, int nquartets,
+                            cuestPrecision_t precision, cuestEriAlgo_t algo, double* out,
+                            const size_t* offsets);
+cuestStatus_t cpu_eri_tensor(const BasisData& basis, cuestPrecision_t precision,
+                             cuestEriAlgo_t algo, double screen_tol, double* eri,
+                             cuestEriStats_t* stats);
 
 /** @brief Shell pair (i >= j) used by the screening and batching machinery. */
 struct ShellPair {
@@ -107,7 +107,7 @@ struct ShellPair {
 };
 
 /** @brief Build the sorted shell-pair list with Schwarz bounds. */
-void build_shell_pairs(const BasisData &basis, std::vector<ShellPair> &pairs, cuestEriAlgo_t algo);
+void build_shell_pairs(const BasisData& basis, std::vector<ShellPair>& pairs, cuestEriAlgo_t algo);
 
 /** @brief Angular-momentum class id 0..9 for a shell quartet (upper triangle of L_i+L_j). */
 int am_class(int la, int lb, int lc, int ld);

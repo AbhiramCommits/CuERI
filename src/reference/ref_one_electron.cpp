@@ -30,7 +30,8 @@ constexpr LD PI_L = 3.14159265358979323846264338327950288L;
 
 [[maybe_unused]] LD dfact(int n) {
   LD r = 1.0L;
-  for (int k = n; k > 0; k -= 2) r *= static_cast<LD>(k);
+  for (int k = n; k > 0; k -= 2)
+    r *= static_cast<LD>(k);
   return r;
 }
 
@@ -45,7 +46,8 @@ LD gamma_series(LD a, LD x) {
     ap += 1.0L;
     del *= x / ap;
     sum += del;
-    if (fabsl(del) < fabsl(sum) * eps) break;
+    if (fabsl(del) < fabsl(sum) * eps)
+      break;
   }
   return sum * expl(-x + a * logl(x) - lgammal(a));
 }
@@ -62,27 +64,33 @@ LD gamma_cf(LD a, LD x) {
     const LD an = -static_cast<LD>(i) * (static_cast<LD>(i) - a);
     b += 2.0L;
     d = an * d + b;
-    if (fabsl(d) < fpmin) d = fpmin;
+    if (fabsl(d) < fpmin)
+      d = fpmin;
     c = b + an / c;
-    if (fabsl(c) < fpmin) c = fpmin;
+    if (fabsl(c) < fpmin)
+      c = fpmin;
     d = 1.0L / d;
     const LD del = d * c;
     h *= del;
-    if (fabsl(del - 1.0L) < eps) break;
+    if (fabsl(del - 1.0L) < eps)
+      break;
   }
   return expl(-x + a * logl(x) - lgammal(a)) * h;
 }
 
 LD gammp(LD a, LD x) {
-  if (x <= 0.0L) return 0.0L;
-  if (x < a + 1.0L) return gamma_series(a, x);
+  if (x <= 0.0L)
+    return 0.0L;
+  if (x < a + 1.0L)
+    return gamma_series(a, x);
   return 1.0L - gamma_cf(a, x);
 }
 
 }  // namespace
 
 LD boys_ref(int n, LD T) {
-  if (T <= 0.0L) return 1.0L / (2.0L * n + 1.0L);
+  if (T <= 0.0L)
+    return 1.0L / (2.0L * n + 1.0L);
   const LD s = static_cast<LD>(n) + 0.5L;
   return 0.5L * gammp(s, T) * tgammal(s) / powl(T, s);
 }
@@ -93,19 +101,23 @@ namespace {
 LD os_overlap_1d(int i, int j, LD p, LD PA, LD PB, LD K) {
   const int ni = i, nj = j;
   std::vector<LD> tab(static_cast<size_t>(ni + 1) * (nj + 1), 0.0L);
-  auto at = [&](int ii, int jj) -> LD & { return tab[static_cast<size_t>(ii) * (nj + 1) + jj]; };
+  auto at = [&](int ii, int jj) -> LD& { return tab[static_cast<size_t>(ii) * (nj + 1) + jj]; };
   at(0, 0) = sqrtl(PI_L / p) * K;
   for (int ii = 0; ii <= ni; ++ii) {
     for (int jj = 0; jj <= nj; ++jj) {
-      if (ii == 0 && jj == 0) continue;
+      if (ii == 0 && jj == 0)
+        continue;
       LD v = 0.0L;
       if (ii > 0) {
         v = PA * at(ii - 1, jj);
-        if (ii - 1 > 0) v += (ii - 1) * at(ii - 2, jj) / (2.0L * p);
-        if (jj > 0) v += jj * at(ii - 1, jj - 1) / (2.0L * p);
+        if (ii - 1 > 0)
+          v += (ii - 1) * at(ii - 2, jj) / (2.0L * p);
+        if (jj > 0)
+          v += jj * at(ii - 1, jj - 1) / (2.0L * p);
       } else {
         v = PB * at(ii, jj - 1);
-        if (jj - 1 > 0) v += (jj - 1) * at(ii, jj - 2) / (2.0L * p);
+        if (jj - 1 > 0)
+          v += (jj - 1) * at(ii, jj - 2) / (2.0L * p);
       }
       at(ii, jj) = v;
     }
@@ -118,7 +130,7 @@ struct Geom {
   LD A[3], B[3], P[3], PA[3], PB[3], Kd[3];
 };
 
-Geom make_geom(LD a, LD b, const double *A, const double *B) {
+Geom make_geom(LD a, LD b, const double* A, const double* B) {
   Geom g;
   g.a = a;
   g.b = b;
@@ -135,23 +147,25 @@ Geom make_geom(LD a, LD b, const double *A, const double *B) {
   return g;
 }
 
-LD prim_overlap_ref(const int la[3], const int lb[3], const Geom &g) {
+LD prim_overlap_ref(const int la[3], const int lb[3], const Geom& g) {
   LD v = 1.0L;
-  for (int d = 0; d < 3; ++d) v *= os_overlap_1d(la[d], lb[d], g.p, g.PA[d], g.PB[d], g.Kd[d]);
+  for (int d = 0; d < 3; ++d)
+    v *= os_overlap_1d(la[d], lb[d], g.p, g.PA[d], g.PB[d], g.Kd[d]);
   return v;
 }
 
 /* S3 with one angular momentum component modified. */
-LD overlap_mod(const int la[3], const int lb[3], const Geom &g, int dim, int di, int dj) {
+LD overlap_mod(const int la[3], const int lb[3], const Geom& g, int dim, int di, int dj) {
   int a2[3] = {la[0], la[1], la[2]};
   int b2[3] = {lb[0], lb[1], lb[2]};
   a2[dim] += di;
   b2[dim] += dj;
-  if (a2[dim] < 0 || b2[dim] < 0) return 0.0L;
+  if (a2[dim] < 0 || b2[dim] < 0)
+    return 0.0L;
   return prim_overlap_ref(a2, b2, g);
 }
 
-LD prim_kinetic_ref(const int la[3], const int lb[3], const Geom &g) {
+LD prim_kinetic_ref(const int la[3], const int lb[3], const Geom& g) {
   LD tot = 0.0L;
   for (int d = 0; d < 3; ++d) {
     const LD la_d = la[d], lb_d = lb[d];
@@ -164,31 +178,35 @@ LD prim_kinetic_ref(const int la[3], const int lb[3], const Geom &g) {
 }
 
 /** @brief Independent Hermite E table (1-D). */
-void hermite_E(int i, int j, LD p, LD PA, LD PB, LD K, std::vector<LD> &out) {
+void hermite_E(int i, int j, LD p, LD PA, LD PB, LD K, std::vector<LD>& out) {
   const int n = i + j + 1;
   std::vector<LD> tab(static_cast<size_t>(i + 1) * (j + 1) * n, 0.0L);
-  auto at = [&](int ii, int jj, int t) -> LD & {
+  auto at = [&](int ii, int jj, int t) -> LD& {
     return tab[(static_cast<size_t>(ii) * (j + 1) + jj) * n + t];
   };
   at(0, 0, 0) = K;
   for (int ii = 0; ii <= i; ++ii)
     for (int jj = 0; jj <= j; ++jj) {
-      if (ii == 0 && jj == 0) continue;
+      if (ii == 0 && jj == 0)
+        continue;
       for (int t = 0; t <= ii + jj; ++t) {
         const int pi = (ii > 0) ? ii - 1 : ii;
         const int pj = (ii > 0) ? jj : jj - 1;
         const LD x = (ii > 0) ? PA : PB;
         LD v = x * at(pi, pj, t);
-        if (t > 0) v += at(pi, pj, t - 1) / (2.0L * p);
-        if (t + 1 < n) v += (t + 1) * at(pi, pj, t + 1);
+        if (t > 0)
+          v += at(pi, pj, t - 1) / (2.0L * p);
+        if (t + 1 < n)
+          v += (t + 1) * at(pi, pj, t + 1);
         at(ii, jj, t) = v;
       }
     }
   out.resize(static_cast<size_t>(i + j + 1));
-  for (int t = 0; t <= i + j; ++t) out[t] = at(i, j, t);
+  for (int t = 0; t <= i + j; ++t)
+    out[t] = at(i, j, t);
 }
 
-LD prim_nuclear_ref(const int la[3], const int lb[3], const Geom &g, const double *C, LD Z) {
+LD prim_nuclear_ref(const int la[3], const int lb[3], const Geom& g, const double* C, LD Z) {
   std::vector<LD> Ex, Ey, Ez;
   hermite_E(la[0], lb[0], g.p, g.PA[0], g.PB[0], 1.0L, Ex);
   hermite_E(la[1], lb[1], g.p, g.PA[1], g.PB[1], 1.0L, Ey);
@@ -203,7 +221,8 @@ LD prim_nuclear_ref(const int la[3], const int lb[3], const Geom &g, const doubl
   T *= g.p;
 
   std::vector<LD> F(lmax + 1);
-  for (int n = 0; n <= lmax; ++n) F[n] = boys_ref(n, T);
+  for (int n = 0; n <= lmax; ++n)
+    F[n] = boys_ref(n, T);
 
   /* R(tx,ty,tz) generated downward in n. */
   std::vector<LD> next, cur;
@@ -240,21 +259,23 @@ LD prim_nuclear_ref(const int la[3], const int lb[3], const Geom &g, const doubl
         sum += Ex[tx] * Ey[ty] * Ez[tz] * next[ridx(tx, ty, tz)];
 
   LD K = 1.0L;
-  for (int k = 0; k < 3; ++k) K *= g.Kd[k];
+  for (int k = 0; k < 3; ++k)
+    K *= g.Kd[k];
   return -Z * (2.0L * PI_L / g.p) * K * sum;
 }
 
 }  // namespace
 
-void compute_one_electron(const cuest::BasisData &basis, int which, double *out, int ld) {
+void compute_one_electron(const cuest::BasisData& basis, int which, double* out, int ld) {
   const size_t nbf = static_cast<size_t>(basis.nbf);
-  for (size_t k = 0; k < nbf * nbf; ++k) out[k] = 0.0;
+  for (size_t k = 0; k < nbf * nbf; ++k)
+    out[k] = 0.0;
   for (size_t ia = 0; ia < basis.shells.size(); ++ia) {
-    const cuest::PrimShell &sa = basis.shells[ia];
+    const cuest::PrimShell& sa = basis.shells[ia];
     for (size_t ib = 0; ib < basis.shells.size(); ++ib) {
-      const cuest::PrimShell &sb = basis.shells[ib];
-      const double *A = &basis.atom_xyz[3 * sa.atom];
-      const double *B = &basis.atom_xyz[3 * sb.atom];
+      const cuest::PrimShell& sb = basis.shells[ib];
+      const double* A = &basis.atom_xyz[3 * sa.atom];
+      const double* B = &basis.atom_xyz[3 * sb.atom];
       const int na = sa.ncomp(), nb = sb.ncomp();
       for (int ca = 0; ca < sa.nctr; ++ca) {
         for (int cb = 0; cb < sb.nctr; ++cb) {
@@ -277,8 +298,8 @@ void compute_one_electron(const cuest::BasisData &basis, int which, double *out,
                                             static_cast<LD>(basis.atom_Z[at]));
                     }
                   }
-                  const LD coef = static_cast<LD>(sa.coeff(ca, ka)[p]) *
-                                  static_cast<LD>(sb.coeff(cb, kb)[q]);
+                  const LD coef =
+                      static_cast<LD>(sa.coeff(ca, ka)[p]) * static_cast<LD>(sb.coeff(cb, kb)[q]);
                   const int row = sa.func_offset + ca * na + ka;
                   const int col = sb.func_offset + cb * nb + kb;
                   out[static_cast<size_t>(row) * ld + col] += static_cast<double>(coef * v);

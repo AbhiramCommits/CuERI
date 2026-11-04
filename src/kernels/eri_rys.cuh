@@ -38,7 +38,8 @@ constexpr int CUEST_RYS_MAX_ROOTS = 5;
  * @brief Probabilists' Hermite polynomial He_m(x).
  */
 CUEST_HD inline double cuest_hermite_he(int m, double x) {
-  if (m <= 0) return 1.0;
+  if (m <= 0)
+    return 1.0;
   double hm2 = 1.0;
   double hm1 = x;
   for (int k = 2; k <= m; ++k) {
@@ -58,19 +59,23 @@ CUEST_HD inline double cuest_hermite_he(int m, double x) {
  * @param[out]    V     Eigenvector matrix (columns are eigenvectors).
  */
 CUEST_HD inline void cuest_jacobi_eigen(double A[CUEST_RYS_MAX_ROOTS][CUEST_RYS_MAX_ROOTS], int n,
-                                        double *evals,
+                                        double* evals,
                                         double V[CUEST_RYS_MAX_ROOTS][CUEST_RYS_MAX_ROOTS]) {
   for (int i = 0; i < n; ++i)
-    for (int j = 0; j < n; ++j) V[i][j] = (i == j) ? 1.0 : 0.0;
+    for (int j = 0; j < n; ++j)
+      V[i][j] = (i == j) ? 1.0 : 0.0;
 
   for (int sweep = 0; sweep < 60; ++sweep) {
     double off = 0.0;
     for (int i = 0; i < n; ++i)
-      for (int j = i + 1; j < n; ++j) off += A[i][j] * A[i][j];
-    if (off < 1e-30) break;
+      for (int j = i + 1; j < n; ++j)
+        off += A[i][j] * A[i][j];
+    if (off < 1e-30)
+      break;
     for (int p = 0; p < n - 1; ++p) {
       for (int q = p + 1; q < n; ++q) {
-        if (fabs(A[p][q]) < 1e-300) continue;
+        if (fabs(A[p][q]) < 1e-300)
+          continue;
         const double theta = (A[q][q] - A[p][p]) / (2.0 * A[p][q]);
         const double sgn = (theta >= 0.0) ? 1.0 : -1.0;
         const double t = sgn / (fabs(theta) + sqrt(theta * theta + 1.0));
@@ -94,7 +99,8 @@ CUEST_HD inline void cuest_jacobi_eigen(double A[CUEST_RYS_MAX_ROOTS][CUEST_RYS_
       }
     }
   }
-  for (int i = 0; i < n; ++i) evals[i] = A[i][i];
+  for (int i = 0; i < n; ++i)
+    evals[i] = A[i][i];
 }
 
 /**
@@ -104,25 +110,31 @@ CUEST_HD inline void cuest_jacobi_eigen(double A[CUEST_RYS_MAX_ROOTS][CUEST_RYS_
  * j = 0..2n-1, and the integral of a polynomial P(u) against
  * exp(-T t^2) dt (u = t^2) is F_0(T) sum_k w_k P(u_k).
  */
-CUEST_HD inline void cuest_rys_rule(double Tval, int n, const double *F, double *u, double *w) {
+CUEST_HD inline void cuest_rys_rule(double Tval, int n, const double* F, double* u, double* w) {
   const double S = (Tval > 1.0) ? Tval : 1.0;
   double mu[2 * CUEST_RYS_MAX_ROOTS];
-  for (int j = 0; j < 2 * n; ++j) mu[j] = cuest_pow_int(S, j) * F[j] / F[0];
+  for (int j = 0; j < 2 * n; ++j)
+    mu[j] = cuest_pow_int(S, j) * F[j] / F[0];
 
   double Q[CUEST_RYS_MAX_ROOTS][CUEST_RYS_MAX_ROOTS];
   for (int k = 0; k < n; ++k) {
     double v[CUEST_RYS_MAX_ROOTS];
-    for (int i = 0; i < n; ++i) v[i] = (i == k) ? 1.0 : 0.0;
+    for (int i = 0; i < n; ++i)
+      v[i] = (i == k) ? 1.0 : 0.0;
     for (int q = 0; q < k; ++q) {
       double ip = 0.0;
-      for (int i = 0; i < n; ++i) ip += Q[q][i] * mu[k + i];
-      for (int i = 0; i < n; ++i) v[i] -= ip * Q[q][i];
+      for (int i = 0; i < n; ++i)
+        ip += Q[q][i] * mu[k + i];
+      for (int i = 0; i < n; ++i)
+        v[i] -= ip * Q[q][i];
     }
     double nn = 0.0;
     for (int i = 0; i < n; ++i)
-      for (int j = 0; j < n; ++j) nn += v[i] * v[j] * mu[i + j];
+      for (int j = 0; j < n; ++j)
+        nn += v[i] * v[j] * mu[i + j];
     const double inv = 1.0 / sqrt(nn);
-    for (int i = 0; i < n; ++i) Q[k][i] = v[i] * inv;
+    for (int i = 0; i < n; ++i)
+      Q[k][i] = v[i] * inv;
   }
 
   double J[CUEST_RYS_MAX_ROOTS][CUEST_RYS_MAX_ROOTS];
@@ -130,7 +142,8 @@ CUEST_HD inline void cuest_rys_rule(double Tval, int n, const double *F, double 
     for (int j = 0; j < n; ++j) {
       double s = 0.0;
       for (int a = 0; a < n; ++a)
-        for (int b = 0; b < n; ++b) s += Q[i][a] * Q[j][b] * mu[a + b + 1];
+        for (int b = 0; b < n; ++b)
+          s += Q[i][a] * Q[j][b] * mu[a + b + 1];
       J[i][j] = 0.5 * (s + s);
     }
   }
@@ -147,13 +160,16 @@ CUEST_HD inline void cuest_rys_rule(double Tval, int n, const double *F, double 
 
   for (int k = 0; k < n; ++k) {
     double node = evals[k] / S;
-    if (node < 0.0) node = 0.0;
-    if (node > 1.0) node = 1.0;
+    if (node < 0.0)
+      node = 0.0;
+    if (node > 1.0)
+      node = 1.0;
     u[k] = node;
     w[k] = V[0][k] * V[0][k];
     /* Weights must be non-negative; numerical noise can make them slightly
        negative only for degenerate rules, clamp to zero. */
-    if (w[k] < 0.0) w[k] = 0.0;
+    if (w[k] < 0.0)
+      w[k] = 0.0;
   }
 }
 
@@ -198,8 +214,8 @@ CUEST_HD T cuest_prim_eri_rys(const int la[3], const int lb[3], const int lc[3],
   const T alpha = p * q / (p + q);
   T PQ[3] = {P[0] - Q[0], P[1] - Q[1], P[2] - Q[2]};
   const T Tval = alpha * (PQ[0] * PQ[0] + PQ[1] * PQ[1] + PQ[2] * PQ[2]);
-  const int ltot = la[0] + la[1] + la[2] + lb[0] + lb[1] + lb[2] + lc[0] + lc[1] + lc[2] + ld[0] +
-                   ld[1] + ld[2];
+  const int ltot =
+      la[0] + la[1] + la[2] + lb[0] + lb[1] + lb[2] + lc[0] + lc[1] + lc[2] + ld[0] + ld[1] + ld[2];
   const int nroots = ltot / 2 + 1;
 
   double F[2 * CUEST_RYS_MAX_ROOTS];
@@ -214,8 +230,8 @@ CUEST_HD T cuest_prim_eri_rys(const int la[3], const int lb[3], const int lc[3],
     const T t = T(sqrt(u[k]));
     T prod = T(1);
     for (int dd = 0; dd < 3; ++dd) {
-      const T *E1 = (dd == 0) ? Ex1 : ((dd == 1) ? Ey1 : Ez1);
-      const T *E2 = (dd == 0) ? Ex2 : ((dd == 1) ? Ey2 : Ez2);
+      const T* E1 = (dd == 0) ? Ex1 : ((dd == 1) ? Ey1 : Ez1);
+      const T* E2 = (dd == 0) ? Ex2 : ((dd == 1) ? Ey2 : Ez2);
       const T z = sq2a * PQ[dd] * t;
       T s = T(0);
       for (int tx = 0; tx <= la[dd] + lb[dd]; ++tx) {
@@ -229,7 +245,8 @@ CUEST_HD T cuest_prim_eri_rys(const int la[3], const int lb[3], const int lc[3],
           }
           const T he = T(cuest_hermite_he(m, static_cast<double>(z)));
           T contrib = p2a * tm * he;
-          if (tx & 1) contrib = -contrib;
+          if (tx & 1)
+            contrib = -contrib;
           s += contrib * E1[tx] * E2[ux];
         }
       }

@@ -31,7 +31,7 @@
 namespace cuest {
 namespace {
 
-constexpr int CUEST_MAX_T = 35;       /* number of |t| <= 4 multi-indices */
+constexpr int CUEST_MAX_T = 35;          /* number of |t| <= 4 multi-indices */
 constexpr int CUEST_MAX_COMP_PAIRS = 36; /* 6 x 6 */
 
 /** @brief Flat index of a multi-index with |t| <= 4. */
@@ -42,7 +42,7 @@ inline int tindex(int tx, int ty, int tz) {
 
 template <typename T>
 inline void build_E3(const T tab[3][9 * CUEST_E1D_TMAX], const int la[3], const int lb[3], int Lt,
-                     T *E) {
+                     T* E) {
   for (int tx = 0; tx <= Lt; ++tx)
     for (int ty = 0; ty <= Lt - tx; ++ty)
       for (int tz = 0; tz <= Lt - tx - ty; ++tz)
@@ -59,19 +59,24 @@ inline void build_E3(const T tab[3][9 * CUEST_E1D_TMAX], const int la[3], const 
  * @param prim_count  Incremented by the number of primitive quartets evaluated.
  */
 template <typename T>
-void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimShell &sb,
-                       const PrimShell &sc, const PrimShell &sd, cuestEriAlgo_t algo, T *block,
-                       size_t *prim_count) {
+void eri_shell_quartet(const BasisData& basis, const PrimShell& sa, const PrimShell& sb,
+                       const PrimShell& sc, const PrimShell& sd, cuestEriAlgo_t algo, T* block,
+                       size_t* prim_count) {
   const int na = sa.ncomp(), nb = sb.ncomp(), nc = sc.ncomp(), nd = sd.ncomp();
   const int ma = sa.nctr * na, mb = sb.nctr * nb, mc = sc.nctr * nc, md = sd.nctr * nd;
   const size_t nblk = static_cast<size_t>(ma) * mb * mc * md;
-  for (size_t k = 0; k < nblk; ++k) block[k] = T(0);
+  for (size_t k = 0; k < nblk; ++k)
+    block[k] = T(0);
 
   int La[CUEST_MAX_CART][3], Lb[CUEST_MAX_CART][3], Lc[CUEST_MAX_CART][3], Ld[CUEST_MAX_CART][3];
-  for (int k = 0; k < na; ++k) cuest_cart_component(sa.L, k, &La[k][0], &La[k][1], &La[k][2]);
-  for (int k = 0; k < nb; ++k) cuest_cart_component(sb.L, k, &Lb[k][0], &Lb[k][1], &Lb[k][2]);
-  for (int k = 0; k < nc; ++k) cuest_cart_component(sc.L, k, &Lc[k][0], &Lc[k][1], &Lc[k][2]);
-  for (int k = 0; k < nd; ++k) cuest_cart_component(sd.L, k, &Ld[k][0], &Ld[k][1], &Ld[k][2]);
+  for (int k = 0; k < na; ++k)
+    cuest_cart_component(sa.L, k, &La[k][0], &La[k][1], &La[k][2]);
+  for (int k = 0; k < nb; ++k)
+    cuest_cart_component(sb.L, k, &Lb[k][0], &Lb[k][1], &Lb[k][2]);
+  for (int k = 0; k < nc; ++k)
+    cuest_cart_component(sc.L, k, &Lc[k][0], &Lc[k][1], &Lc[k][2]);
+  for (int k = 0; k < nd; ++k)
+    cuest_cart_component(sd.L, k, &Ld[k][0], &Ld[k][1], &Ld[k][2]);
 
   T A[3], B[3], C[3], D[3];
   for (int k = 0; k < 3; ++k) {
@@ -106,14 +111,12 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
                   }
                   const T AB[3] = {A[0] - B[0], A[1] - B[1], A[2] - B[2]};
                   const T CD[3] = {C[0] - D[0], C[1] - D[1], C[2] - D[2]};
-                  const T K1 = T(exp(-static_cast<double>(a) * static_cast<double>(b) /
-                                    static_cast<double>(p) *
-                                    static_cast<double>(AB[0] * AB[0] + AB[1] * AB[1] +
-                                                        AB[2] * AB[2])));
-                  const T K2 = T(exp(-static_cast<double>(c) * static_cast<double>(d) /
-                                    static_cast<double>(q) *
-                                    static_cast<double>(CD[0] * CD[0] + CD[1] * CD[1] +
-                                                        CD[2] * CD[2])));
+                  const T K1 = T(exp(
+                      -static_cast<double>(a) * static_cast<double>(b) / static_cast<double>(p) *
+                      static_cast<double>(AB[0] * AB[0] + AB[1] * AB[1] + AB[2] * AB[2])));
+                  const T K2 = T(exp(
+                      -static_cast<double>(c) * static_cast<double>(d) / static_cast<double>(q) *
+                      static_cast<double>(CD[0] * CD[0] + CD[1] * CD[1] + CD[2] * CD[2])));
 
                   T tabA[3][9 * CUEST_E1D_TMAX];
                   T tabC[3][9 * CUEST_E1D_TMAX];
@@ -142,8 +145,9 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
                     for (int kc = 0; kc < nc; ++kc) {
                       for (int kd = 0; kd < nd; ++kd) {
                         build_E3(tabC, Lc[kc], Ld[kd], Lu, E2);
-                        T *h = &H[(kc * nd + kd) * nt];
-                        for (int it = 0; it < nt; ++it) h[it] = T(0);
+                        T* h = &H[(kc * nd + kd) * nt];
+                        for (int it = 0; it < nt; ++it)
+                          h[it] = T(0);
                         for (int tx = 0; tx <= Lt; ++tx)
                           for (int ty = 0; ty <= Lt - tx; ++ty)
                             for (int tz = 0; tz <= Lt - tx - ty; ++tz) {
@@ -171,10 +175,11 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
                           const T cabc = cab * T(sc.coeff(icc, kc)[pc]);
                           for (int kd = 0; kd < nd; ++kd) {
                             const T coef = cabc * T(sd.coeff(icd, kd)[pd]);
-                            const T *e1 = &E1[(ka * nb + kb) * nt];
-                            const T *h = &H[(kc * nd + kd) * nt];
+                            const T* e1 = &E1[(ka * nb + kb) * nt];
+                            const T* h = &H[(kc * nd + kd) * nt];
                             T s = T(0);
-                            for (int it = 0; it < nt; ++it) s += e1[it] * h[it];
+                            for (int it = 0; it < nt; ++it)
+                              s += e1[it] * h[it];
                             const int fa = ica * na + ka;
                             const int fb = icb * nb + kb;
                             const int fc = icc * nc + kc;
@@ -207,14 +212,15 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
                               const T t = T(sqrt(u[ir]));
                               T prod = T(1);
                               for (int dd = 0; dd < 3; ++dd) {
-                                const int *la = La[ka];
-                                const int *lb = Lb[kb];
-                                const int *lc = Lc[kc];
-                                const int *ld = Ld[kd];
+                                const int* la = La[ka];
+                                const int* lb = Lb[kb];
+                                const int* lc = Lc[kc];
+                                const int* ld = Ld[kd];
                                 const T z = sq2a * PQ[dd] * t;
                                 T s = T(0);
                                 for (int tx = 0; tx <= la[dd] + lb[dd]; ++tx) {
-                                  const T e1 = tabA[dd][(la[dd] * 3 + lb[dd]) * CUEST_E1D_TMAX + tx];
+                                  const T e1 =
+                                      tabA[dd][(la[dd] * 3 + lb[dd]) * CUEST_E1D_TMAX + tx];
                                   for (int ux = 0; ux <= lc[dd] + ld[dd]; ++ux) {
                                     const int m = tx + ux;
                                     T p2a = T(1);
@@ -227,7 +233,8 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
                                     T contrib =
                                         p2a * tm * he *
                                         tabC[dd][(lc[dd] * 3 + ld[dd]) * CUEST_E1D_TMAX + ux] * e1;
-                                    if (tx & 1) contrib = -contrib;
+                                    if (tx & 1)
+                                      contrib = -contrib;
                                     s += contrib;
                                   }
                                 }
@@ -261,7 +268,7 @@ void eri_shell_quartet(const BasisData &basis, const PrimShell &sa, const PrimSh
 /* ------------------------------------------------------------------------- */
 
 template <typename T>
-double schwarz_bound(const BasisData &basis, const PrimShell &sa, const PrimShell &sb) {
+double schwarz_bound(const BasisData& basis, const PrimShell& sa, const PrimShell& sb) {
   const int ma = sa.nctr * sa.ncomp();
   const int mb = sb.nctr * sb.ncomp();
   std::vector<T> block(static_cast<size_t>(ma) * mb * ma * mb);
@@ -270,7 +277,8 @@ double schwarz_bound(const BasisData &basis, const PrimShell &sa, const PrimShel
   double best = 0.0;
   for (const T v : block) {
     const double a = std::fabs(static_cast<double>(v));
-    if (a > best) best = a;
+    if (a > best)
+      best = a;
   }
   return std::sqrt(best);
 }
@@ -286,7 +294,7 @@ int am_class(int la, int lb, int lc, int ld) {
   return lo * 5 + hi;
 }
 
-void build_shell_pairs(const BasisData &basis, std::vector<ShellPair> &pairs, cuestEriAlgo_t algo) {
+void build_shell_pairs(const BasisData& basis, std::vector<ShellPair>& pairs, cuestEriAlgo_t algo) {
   (void)algo;
   pairs.clear();
   pairs.reserve(static_cast<size_t>(basis.nshells) * (basis.nshells + 1) / 2);
@@ -295,7 +303,8 @@ void build_shell_pairs(const BasisData &basis, std::vector<ShellPair> &pairs, cu
   std::vector<std::pair<int, int>> index;
   index.reserve(bounds.size());
   for (int i = 0; i < basis.nshells; ++i)
-    for (int j = 0; j <= i; ++j) index.emplace_back(i, j);
+    for (int j = 0; j <= i; ++j)
+      index.emplace_back(i, j);
 
   const long np = static_cast<long>(index.size());
 #if defined(CUEST_USE_OPENMP)
@@ -316,13 +325,15 @@ void build_shell_pairs(const BasisData &basis, std::vector<ShellPair> &pairs, cu
   }
 }
 
-cuestStatus_t cpu_schwarz(const BasisData &basis, double *q_pair) {
-  if (!q_pair) return CUEST_INVALID_VALUE;
+cuestStatus_t cpu_schwarz(const BasisData& basis, double* q_pair) {
+  if (!q_pair)
+    return CUEST_INVALID_VALUE;
   std::vector<ShellPair> pairs;
   build_shell_pairs(basis, pairs, CUEST_ERI_ALGO_MD);
   const size_t n = static_cast<size_t>(basis.nshells);
-  for (size_t k = 0; k < n * n; ++k) q_pair[k] = 0.0;
-  for (const ShellPair &p : pairs) {
+  for (size_t k = 0; k < n * n; ++k)
+    q_pair[k] = 0.0;
+  for (const ShellPair& p : pairs) {
     q_pair[static_cast<size_t>(p.i) * n + p.j] = p.q;
     q_pair[static_cast<size_t>(p.j) * n + p.i] = p.q;
   }
@@ -340,19 +351,17 @@ struct QuartetDesc {
 };
 
 template <typename T>
-void scatter_symmetries(const BasisData &basis, const QuartetDesc &q, const T *block,
-                        double *eri) {
+void scatter_symmetries(const BasisData& basis, const QuartetDesc& q, const T* block, double* eri) {
   const int nbf = basis.nbf;
-  const PrimShell *sh[4] = {&basis.shells[static_cast<size_t>(q.i)],
-                            &basis.shells[static_cast<size_t>(q.j)],
-                            &basis.shells[static_cast<size_t>(q.k)],
-                            &basis.shells[static_cast<size_t>(q.l)]};
+  const PrimShell* sh[4] = {
+      &basis.shells[static_cast<size_t>(q.i)], &basis.shells[static_cast<size_t>(q.j)],
+      &basis.shells[static_cast<size_t>(q.k)], &basis.shells[static_cast<size_t>(q.l)]};
   const int m[4] = {sh[0]->nctr * sh[0]->ncomp(), sh[1]->nctr * sh[1]->ncomp(),
                     sh[2]->nctr * sh[2]->ncomp(), sh[3]->nctr * sh[3]->ncomp()};
   const int perms[8][4] = {{0, 1, 2, 3}, {1, 0, 2, 3}, {0, 1, 3, 2}, {1, 0, 3, 2},
                            {2, 3, 0, 1}, {3, 2, 0, 1}, {2, 3, 1, 0}, {3, 2, 1, 0}};
   for (int ip = 0; ip < 8; ++ip) {
-    const int *pm = perms[ip];
+    const int* pm = perms[ip];
     for (int fa = 0; fa < m[0]; ++fa) {
       for (int fb = 0; fb < m[1]; ++fb) {
         for (int fc = 0; fc < m[2]; ++fc) {
@@ -374,35 +383,40 @@ void scatter_symmetries(const BasisData &basis, const QuartetDesc &q, const T *b
 
 }  // namespace
 
-cuestStatus_t cpu_eri_batch(const BasisData &basis, const cuestQuartet_t *quartets, int nquartets,
-                            cuestPrecision_t precision, cuestEriAlgo_t algo, double *out,
-                            const size_t *offsets) {
-  if (nquartets < 0 || (nquartets > 0 && (!quartets || !out))) return CUEST_INVALID_VALUE;
-  if (precision != CUEST_FP32 && precision != CUEST_FP64) return CUEST_INVALID_VALUE;
+cuestStatus_t cpu_eri_batch(const BasisData& basis, const cuestQuartet_t* quartets, int nquartets,
+                            cuestPrecision_t precision, cuestEriAlgo_t algo, double* out,
+                            const size_t* offsets) {
+  if (nquartets < 0 || (nquartets > 0 && (!quartets || !out)))
+    return CUEST_INVALID_VALUE;
+  if (precision != CUEST_FP32 && precision != CUEST_FP64)
+    return CUEST_INVALID_VALUE;
   size_t cursor = 0;
   for (int iq = 0; iq < nquartets; ++iq) {
-    const cuestQuartet_t &q = quartets[iq];
+    const cuestQuartet_t& q = quartets[iq];
     const int ids[4] = {q.i, q.j, q.k, q.l};
     for (int k = 0; k < 4; ++k) {
-      if (ids[k] < 0 || ids[k] >= basis.nshells) return CUEST_INVALID_VALUE;
+      if (ids[k] < 0 || ids[k] >= basis.nshells)
+        return CUEST_INVALID_VALUE;
     }
-    const PrimShell &sa = basis.shells[static_cast<size_t>(q.i)];
-    const PrimShell &sb = basis.shells[static_cast<size_t>(q.j)];
-    const PrimShell &sc = basis.shells[static_cast<size_t>(q.k)];
-    const PrimShell &sd = basis.shells[static_cast<size_t>(q.l)];
+    const PrimShell& sa = basis.shells[static_cast<size_t>(q.i)];
+    const PrimShell& sb = basis.shells[static_cast<size_t>(q.j)];
+    const PrimShell& sc = basis.shells[static_cast<size_t>(q.k)];
+    const PrimShell& sd = basis.shells[static_cast<size_t>(q.l)];
     const size_t nblk = static_cast<size_t>(sa.nctr * sa.ncomp()) * (sb.nctr * sb.ncomp()) *
                         (sc.nctr * sc.ncomp()) * (sd.nctr * sd.ncomp());
-    double *dst = out + (offsets ? offsets[iq] : cursor);
+    double* dst = out + (offsets ? offsets[iq] : cursor);
     if (precision == CUEST_FP32) {
       std::vector<float> block(nblk);
       size_t prim = 0;
       eri_shell_quartet<float>(basis, sa, sb, sc, sd, algo, block.data(), &prim);
-      for (size_t k = 0; k < nblk; ++k) dst[k] = static_cast<double>(block[k]);
+      for (size_t k = 0; k < nblk; ++k)
+        dst[k] = static_cast<double>(block[k]);
     } else {
       std::vector<double> block(nblk);
       size_t prim = 0;
       eri_shell_quartet<double>(basis, sa, sb, sc, sd, algo, block.data(), &prim);
-      for (size_t k = 0; k < nblk; ++k) dst[k] = block[k];
+      for (size_t k = 0; k < nblk; ++k)
+        dst[k] = block[k];
     }
     cursor += nblk;
   }
@@ -412,8 +426,8 @@ cuestStatus_t cpu_eri_batch(const BasisData &basis, const cuestQuartet_t *quarte
 namespace {
 
 template <typename T>
-cuestStatus_t run_eri_tensor(const BasisData &basis, cuestEriAlgo_t algo, double screen_tol,
-                             double *eri, cuestEriStats_t *stats) {
+cuestStatus_t run_eri_tensor(const BasisData& basis, cuestEriAlgo_t algo, double screen_tol,
+                             double* eri, cuestEriStats_t* stats) {
   const auto t0 = std::chrono::steady_clock::now();
   std::vector<ShellPair> pairs;
   build_shell_pairs(basis, pairs, algo);
@@ -444,11 +458,11 @@ cuestStatus_t run_eri_tensor(const BasisData &basis, cuestEriAlgo_t algo, double
 #pragma omp parallel for schedule(dynamic, 4) reduction(+ : prim_total)
 #endif
   for (long iq = 0; iq < nq; ++iq) {
-    const QuartetDesc &q = quartets[static_cast<size_t>(iq)];
-    const PrimShell &sa = basis.shells[static_cast<size_t>(q.i)];
-    const PrimShell &sb = basis.shells[static_cast<size_t>(q.j)];
-    const PrimShell &sc = basis.shells[static_cast<size_t>(q.k)];
-    const PrimShell &sd = basis.shells[static_cast<size_t>(q.l)];
+    const QuartetDesc& q = quartets[static_cast<size_t>(iq)];
+    const PrimShell& sa = basis.shells[static_cast<size_t>(q.i)];
+    const PrimShell& sb = basis.shells[static_cast<size_t>(q.j)];
+    const PrimShell& sc = basis.shells[static_cast<size_t>(q.k)];
+    const PrimShell& sd = basis.shells[static_cast<size_t>(q.l)];
     const size_t nblk = static_cast<size_t>(sa.nctr * sa.ncomp()) * (sb.nctr * sb.ncomp()) *
                         (sc.nctr * sc.ncomp()) * (sd.nctr * sd.ncomp());
     std::vector<T> block(nblk);
@@ -470,11 +484,13 @@ cuestStatus_t run_eri_tensor(const BasisData &basis, cuestEriAlgo_t algo, double
 
 }  // namespace
 
-cuestStatus_t cpu_eri_tensor(const BasisData &basis, cuestPrecision_t precision,
-                             cuestEriAlgo_t algo, double screen_tol, double *eri,
-                             cuestEriStats_t *stats) {
-  if (!eri) return CUEST_INVALID_VALUE;
-  if (precision != CUEST_FP32 && precision != CUEST_FP64) return CUEST_INVALID_VALUE;
+cuestStatus_t cpu_eri_tensor(const BasisData& basis, cuestPrecision_t precision,
+                             cuestEriAlgo_t algo, double screen_tol, double* eri,
+                             cuestEriStats_t* stats) {
+  if (!eri)
+    return CUEST_INVALID_VALUE;
+  if (precision != CUEST_FP32 && precision != CUEST_FP64)
+    return CUEST_INVALID_VALUE;
   if (stats) {
     stats->quartets_total = 0;
     stats->quartets_screened = 0;
