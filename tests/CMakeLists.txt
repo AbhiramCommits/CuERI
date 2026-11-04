@@ -8,7 +8,8 @@ function(cuest_add_test name)
       ${CMAKE_SOURCE_DIR}/src)
   target_compile_definitions(${name} PRIVATE
       CUEST_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
-      CUEST_EXPECT_CPU_ONLY=$<BOOL:${CUEST_CUDA_AVAILABLE}>0)
+      CUEST_EXPECT_CPU_ONLY=$<BOOL:${CUEST_CUDA_AVAILABLE}>0
+      CUEST_HAS_CUDA=$<BOOL:${CUEST_CUDA_AVAILABLE}>)
   target_compile_options(${name} PRIVATE -Wall -Wextra)
   add_test(NAME ${name} COMMAND ${name})
   set_tests_properties(${name} PROPERTIES TIMEOUT 1800)
@@ -18,3 +19,4 @@ cuest_add_test(test_api)
 cuest_add_test(test_boys)
 cuest_add_test(test_one_electron)
 cuest_add_test(test_eri)
+cuest_add_test(test_backend_parity)

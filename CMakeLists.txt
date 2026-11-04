@@ -108,7 +108,7 @@ endif()
 if(CUEST_CUDA_AVAILABLE)
   target_compile_definitions(cuest_eri PRIVATE CUEST_WITH_CUDA=1)
   set_target_properties(cuest_eri PROPERTIES
-      CUDA_SEPARABLE_COMPILATION OFF
+      CUDA_SEPARABLE_COMPILATION ON
       CUDA_RESOLVE_DEVICE_SYMBOLS OFF)
   target_compile_options(cuest_eri PRIVATE
       $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo;-Xptxas;-v>)
