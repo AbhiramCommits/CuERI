@@ -71,7 +71,8 @@ set(CUEST_SOURCES
     src/cuest_api.cpp
     src/basis_loader.cpp
     src/one_electron.cpp
-    src/eri_cpu.cpp)
+    src/eri_cpu.cpp
+    src/reference/ref_one_electron.cpp)
 
 if(CUEST_CUDA_AVAILABLE)
   list(APPEND CUEST_SOURCES src/cuda/cuda_backend.cpp src/cuda/cuest_kernels.cu)

@@ -15,3 +15,5 @@ function(cuest_add_test name)
 endfunction()
 
 cuest_add_test(test_api)
+cuest_add_test(test_boys)
+cuest_add_test(test_one_electron)
