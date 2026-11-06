@@ -60,14 +60,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # v0.2.16 fetches cuda-keyring_1.0-1, which 404s on ubuntu-latest (24.04),
+      # and CUDA 12.4 has no ubuntu2404 packages; 12.6 is the first line there.
       - name: Install CUDA toolkit (no GPU)
-        uses: Jimver/cuda-toolkit@v0.2.16
+        uses: Jimver/cuda-toolkit@v0.2.21
         with:
-          cuda: '12.4.1'
+          cuda: '12.6.3'
           method: network
+          sub-packages: '["nvcc", "cudart-dev"]'
 
+      # check_language(CUDA) silently falls back to a CPU-only build when nvcc
+      # is missing; fail instead, so this job really compiles the device path.
       - name: Configure with CUDA
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCUEST_ENABLE_CUDA=ON
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCUEST_ENABLE_CUDA=ON | tee configure.log
+          grep -q "CUDA backend enabled" configure.log
 
       - name: Compile (keeps the device path from rotting)
         run: cmake --build build -j

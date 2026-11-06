@@ -106,10 +106,16 @@ if(CUEST_OPENMP_FOUND)
 endif()
 
 if(CUEST_CUDA_AVAILABLE)
+  # The host-side CUDA backend (.cpp files) includes cuda_runtime.h and calls
+  # the runtime API, so it needs the toolkit headers and cudart, not just nvcc.
+  find_package(CUDAToolkit REQUIRED)
+  target_link_libraries(cuest_eri PRIVATE CUDA::cudart)
   target_compile_definitions(cuest_eri PRIVATE CUEST_WITH_CUDA=1)
   set_target_properties(cuest_eri PROPERTIES
       CUDA_SEPARABLE_COMPILATION ON
-      CUDA_RESOLVE_DEVICE_SYMBOLS OFF)
+      # Shared library: run the device link here, otherwise every consumer
+      # fails with an undefined __cudaRegisterLinkedBinary_* symbol.
+      CUDA_RESOLVE_DEVICE_SYMBOLS ON)
   target_compile_options(cuest_eri PRIVATE
       $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo;-Xptxas;-v>)
   # Capture real ptxas register/spill output at build time (Tier A/B).
@@ -118,6 +124,7 @@ if(CUEST_CUDA_AVAILABLE)
     COMMAND ${CMAKE_CUDA_COMPILER} -std=c++17 -lineinfo -Xptxas -v -c
             ${CMAKE_CURRENT_SOURCE_DIR}/src/cuda/cuest_kernels.cu
             -I${CMAKE_CURRENT_SOURCE_DIR}/src
+            -I${CMAKE_CURRENT_SOURCE_DIR}/include
             -o ${CMAKE_CURRENT_BINARY_DIR}/cuest_kernels_ptxas.o
             2> ${CMAKE_CURRENT_SOURCE_DIR}/results/ptxas_verbose.txt
     COMMENT "Capturing ptxas -v register/spill report to results/ptxas_verbose.txt"
